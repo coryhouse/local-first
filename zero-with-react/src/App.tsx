@@ -14,10 +14,6 @@ function App() {
     ttl: "5m",
   });
 
-  const [inventory] = useQuery(z.query.inventory, {
-    ttl: "5m",
-  });
-
   const [mediums] = useQuery(z.query.medium, {
     ttl: "5m",
   });
@@ -48,7 +44,7 @@ function App() {
   const hasFilters = filterUser || filterText;
 
   // If initial sync hasn't completed, these can be empty.
-  if (!users.length || !mediums.length || !inventory.length) {
+  if (!users.length || !mediums.length) {
     return null;
   }
 
@@ -56,17 +52,6 @@ function App() {
 
   return (
     <>
-      <h2>Inventory</h2>
-      {inventory.map((v) => (
-        <ul key={v.id}>
-          <li>
-            {v.make} {v.model} ({v.year}){" "}
-            <button onClick={() => z.mutate.inventory.delete({ id: v.id })}>
-              Delete
-            </button>
-          </li>
-        </ul>
-      ))}
       <div className="controls">
         <div>
           <RepeatButton
