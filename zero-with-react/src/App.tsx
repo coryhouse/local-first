@@ -14,7 +14,7 @@ function App() {
     ttl: "5m",
   });
 
-  const [cars] = useQuery(z.query.car, {
+  const [inventory] = useQuery(z.query.inventory, {
     ttl: "5m",
   });
 
@@ -48,7 +48,7 @@ function App() {
   const hasFilters = filterUser || filterText;
 
   // If initial sync hasn't completed, these can be empty.
-  if (!users.length || !mediums.length || !cars.length) {
+  if (!users.length || !mediums.length || !inventory.length) {
     return null;
   }
 
@@ -56,11 +56,12 @@ function App() {
 
   return (
     <>
-      {cars.map((car) => (
-        <ul key={car.id}>
+      <h2>Inventory</h2>
+      {inventory.map((v) => (
+        <ul key={v.id}>
           <li>
-            {car.make} {car.model} ({car.year}){" "}
-            <button onClick={() => z.mutate.car.delete({ id: car.id })}>
+            {v.make} {v.model} ({v.year}){" "}
+            <button onClick={() => z.mutate.inventory.delete({ id: v.id })}>
               Delete
             </button>
           </li>

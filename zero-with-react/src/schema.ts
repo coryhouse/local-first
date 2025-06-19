@@ -29,7 +29,7 @@ const message = table("message")
   })
   .primaryKey("id");
 
-const car = table("car")
+const inventory = table("inventory")
   .columns({
     id: string(),
     make: string(),
@@ -67,7 +67,7 @@ const messageRelationships = relationships(message, ({ one }) => ({
 }));
 
 export const schema = createSchema({
-  tables: [user, medium, message, car],
+  tables: [user, medium, message, inventory],
   relationships: [messageRelationships],
 });
 
@@ -75,7 +75,7 @@ export type Schema = typeof schema;
 export type Message = Row<typeof schema.tables.message>;
 export type Medium = Row<typeof schema.tables.medium>;
 export type User = Row<typeof schema.tables.user>;
-export type Car = Row<typeof schema.tables.car>;
+export type Car = Row<typeof schema.tables.inventory>;
 
 // The contents of your decoded JWT.
 type AuthData = {
@@ -99,7 +99,7 @@ export const permissions = definePermissions<AuthData, Schema>(schema, () => {
         select: ANYONE_CAN,
       },
     },
-    car: {
+    inventory: {
       row: {
         select: ANYONE_CAN,
         delete: ANYONE_CAN,
