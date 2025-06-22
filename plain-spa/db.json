@@ -5,8 +5,8 @@
       "make": "Toyota",
       "model": "Corolla",
       "year": 2020,
-      "price": 20000,
-      "sold": true
+      "price": 24000,
+      "status": "available"
     },
     {
       "id": 2,
@@ -14,7 +14,7 @@
       "model": "Q30",
       "year": 2003,
       "price": 15000,
-      "sold": false
+      "status": "sold"
     }
   ]
 }

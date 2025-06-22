@@ -4,5 +4,5 @@ export type Vehicle = {
   make: string;
   model: string;
   price: number | null;
-  sold: boolean;
+  status: "reconditioning" | "on sale" | "sold" | null;
 };
