@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import type { Vehicle } from "./types/Vehicle";
+import toast from "react-hot-toast";
 
 const emptyVehicle: Vehicle = {
   id: "",
@@ -72,6 +73,7 @@ export default function Inventory() {
         },
         body: JSON.stringify({ price }),
       });
+      toast.success("Price saved");
     }
   }
 
