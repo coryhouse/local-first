@@ -6,7 +6,7 @@
   "scripts": {
     "start": "concurrently npm:start:app npm:start:api",
     "start:app": "vite --port 3000 --strictPort",
-    "start:api": "json-server db.json --watch --port 3001",
+    "start:api": "json-server db.json --watch --port 3001 --delay 2000",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
