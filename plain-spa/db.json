@@ -1,0 +1,10 @@
+{
+  "vehicles": [
+    {
+      "id": 1,
+      "make": "Toyota",
+      "model": "Corolla",
+      "year": 2020
+    }
+  ]
+}
