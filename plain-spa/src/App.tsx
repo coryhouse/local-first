@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { Vehicle } from "./types/Vehicle";
 
 const emptyVehicle = {
@@ -10,7 +10,21 @@ const emptyVehicle = {
 
 export default function Inventory() {
   const [newVehicle, setNewVehicle] = useState(emptyVehicle);
+  const [isLoading, setIsLoading] = useState(false);
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
+
+  useEffect(() => {
+    fetch("http://localhost:3001/vehicles").then((response) =>
+      response
+        .json()
+        .then((data) => {
+          setVehicles(data);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        })
+    );
+  }, []);
 
   function onAddVehicleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { value } = e.target;
@@ -75,6 +89,9 @@ export default function Inventory() {
         </button>
       </form>
 
+      {isLoading && <p>Loading...</p>}
+      {!isLoading && vehicles.length === 0 && <p>No vehicles found.</p>}
+
       {vehicles.map((v) => (
         <ul key={v.id}>
           <li>
@@ -94,7 +111,13 @@ export default function Inventory() {
             </button>{" "}
             <button
               onClick={() => {
-                // TODO DELETE
+                fetch(`http://localhost:3001/vehicles/${v.id}`, {
+                  method: "DELETE",
+                }).then(() => {
+                  setVehicles((prev) =>
+                    prev.filter((vehicle) => vehicle.id !== v.id)
+                  );
+                });
               }}
             >
               Delete
