@@ -15,6 +15,22 @@
       "year": 2003,
       "price": 15000,
       "status": "sold"
+    },
+    {
+      "id": 3,
+      "make": "Porsche",
+      "model": "911 Turbo",
+      "year": 2009,
+      "price": null,
+      "status": null
+    },
+    {
+      "id": 4,
+      "make": "Nissan",
+      "model": "300ZX Turbo",
+      "year": 1996,
+      "price": null,
+      "status": null
     }
   ]
 }
