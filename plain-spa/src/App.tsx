@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import type { Vehicle } from "./types/Vehicle";
 import toast from "react-hot-toast";
+import { Issues } from "./Issues";
 
 const emptyVehicle: Vehicle = {
   id: "",
@@ -8,12 +9,13 @@ const emptyVehicle: Vehicle = {
   model: "",
   year: null,
   price: null,
-  sold: false,
+  status: null,
 };
 
 export default function Inventory() {
   const [newVehicle, setNewVehicle] = useState(emptyVehicle);
-  const [isLoading, setIsLoading] = useState(false);
+  const [savingVehicleIds, setSavingVehicleIds] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
 
   useEffect(() => {
@@ -38,47 +40,47 @@ export default function Inventory() {
     }));
   }
 
-  function onVehicleInputChange(
+  function onPriceChange(
     e: React.ChangeEvent<HTMLInputElement>,
     vehicle: Vehicle
   ) {
-    const { value } = e.target;
     setVehicles((prev) =>
       prev.map((v) =>
         v.id === vehicle.id
           ? {
               ...v,
-              [e.target.name]: value,
+              [e.target.name]: e.target.value,
             }
           : v
       )
     );
   }
 
-  function onVehicleInputBlur(
-    e: React.FocusEvent<HTMLInputElement>,
-    vehicle: Vehicle
-  ) {
-    const { value } = e.target;
-    if (e.target.name === "price" && value) {
-      const price = Number(value);
-      if (isNaN(price)) {
-        alert("Please enter a valid number for price.");
-        return;
-      }
-      fetch(`http://localhost:3001/vehicles/${vehicle.id}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ price }),
-      });
-      toast.success("Price saved");
+  function save(e: React.FormEvent<HTMLInputElement>, vehicle: Vehicle) {
+    e.preventDefault();
+    setSavingVehicleIds((prev) => [...prev, vehicle.id]);
+    if (vehicle.price === null || isNaN(vehicle.price)) {
+      alert("Please enter a valid number for price.");
+      return;
     }
+    fetch(`http://localhost:3001/vehicles/${vehicle.id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ price: vehicle.price, status: vehicle.status }),
+    })
+      .then(() => {
+        toast.success("Vehicle saved");
+      })
+      .finally(() => {
+        setSavingVehicleIds((prev) => prev.filter((id) => id !== vehicle.id));
+      });
   }
 
   return (
     <>
+      <Issues />
       <h1>Vehicles For Sale</h1>
 
       <h2>Add Vehicle</h2>
@@ -89,13 +91,13 @@ export default function Inventory() {
           placeholder="Year"
           onChange={onAddVehicleChange}
           value={newVehicle.year || ""}
-        />
+        />{" "}
         <input
           type="text"
           placeholder="Make"
           onChange={onAddVehicleChange}
           value={newVehicle.make}
-        />
+        />{" "}
         <input
           type="text"
           placeholder="Model"
@@ -137,56 +139,61 @@ export default function Inventory() {
       {isLoading && <p>Loading...</p>}
       {!isLoading && vehicles.length === 0 && <p>No vehicles found.</p>}
 
-      {vehicles.map((v) => (
-        <ul key={v.id}>
-          <li style={{ listStyleType: "none", paddingLeft: "0" }}>
-            {`${v.year} ${v.make} ${v.model} -`}${" "}
-            <input
-              type="text"
-              name="price"
-              placeholder="Price"
-              value={v.price || ""}
-              onChange={(e) => onVehicleInputChange(e, v)}
-              onBlur={(e) => onVehicleInputBlur(e, v)}
-            />
-            <input
-              type="checkbox"
-              name="sold"
-              checked={v.sold}
-              onChange={(e) => {
-                setVehicles((prev) =>
-                  prev.map((vehicle) =>
-                    vehicle.id === v.id
-                      ? { ...vehicle, sold: e.target.checked }
-                      : vehicle
-                  )
-                );
-              }}
-            />
-            <label>Sold</label>
-            <button
-              onClick={() => {
-                // TODO UPDATE
-              }}
-            >
-              Update
-            </button>{" "}
-            <button
-              onClick={() => {
-                fetch(`http://localhost:3001/vehicles/${v.id}`, {
-                  method: "DELETE",
-                }).then(() => {
+      <form>
+        <ul style={{ margin: 0, padding: 0 }}>
+          {vehicles.map((v) => (
+            <li style={{ listStyleType: "none", paddingLeft: "0", margin: 0 }}>
+              <button
+                style={{ backgroundColor: "white" }}
+                onClick={() => {
+                  fetch(`http://localhost:3001/vehicles/${v.id}`, {
+                    method: "DELETE",
+                  }).then(() => {
+                    setVehicles((prev) =>
+                      prev.filter((vehicle) => vehicle.id !== v.id)
+                    );
+                  });
+                }}
+              >
+                ❌
+              </button>
+              {`${v.year} ${v.make} ${v.model} -`}${" "}
+              <input
+                type="text"
+                name="price"
+                placeholder="Price"
+                value={v.price || ""}
+                onChange={(e) => onPriceChange(e, v)}
+              />{" "}
+              <select
+                name="status"
+                value={v.status || ""}
+                onChange={(e) => {
                   setVehicles((prev) =>
-                    prev.filter((vehicle) => vehicle.id !== v.id)
+                    prev.map((vehicle) =>
+                      vehicle.id === v.id
+                        ? {
+                            ...vehicle,
+                            status: e.target.value as Vehicle["status"],
+                          }
+                        : vehicle
+                    )
                   );
-                });
-              }}
-            >
-              Delete
-            </button>
-          </li>
+                }}
+              >
+                <option value="">Status</option>
+                <option value="reconditioning">Reconditioning</option>
+                <option value="on sale">On Sale</option>
+                <option value="sold">Sold</option>
+              </select>{" "}
+              <input type="submit" value="Save" onSubmit={(e) => save(e, v)} />
+              {savingVehicleIds.find((i) => i === v.id) && (
+                <span>Saving...</span>
+              )}
+            </li>
+          ))}
         </ul>
-      ))}
+      </form>
     </>
   );
 }
