@@ -16,6 +16,7 @@ export default function Inventory() {
   const [newVehicle, setNewVehicle] = useState(emptyVehicle);
   const [savingVehicleIds, setSavingVehicleIds] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isAdding, setIsAdding] = useState(false);
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
 
   useEffect(() => {
@@ -103,7 +104,7 @@ export default function Inventory() {
           placeholder="Model"
           onChange={onAddVehicleChange}
           value={newVehicle.model}
-        />
+        />{" "}
         <button
           onClick={(e) => {
             e.preventDefault();
@@ -111,7 +112,7 @@ export default function Inventory() {
               alert("Please fill in all fields.");
               return;
             }
-            setIsLoading(true);
+            setIsAdding(true);
 
             fetch("http://localhost:3001/vehicles", {
               method: "POST",
@@ -125,7 +126,7 @@ export default function Inventory() {
                 setVehicles((prev) => [...prev, data]);
               })
               .finally(() => {
-                setIsLoading(false);
+                setIsAdding(false);
               });
 
             // Reset the form
@@ -134,6 +135,7 @@ export default function Inventory() {
         >
           Add
         </button>
+        {isAdding && <span>Adding...</span>}
       </form>
 
       {isLoading && <p>Loading...</p>}
@@ -186,7 +188,9 @@ export default function Inventory() {
                 <option value="on sale">On Sale</option>
                 <option value="sold">Sold</option>
               </select>{" "}
-              <input type="submit" value="Save" onSubmit={(e) => save(e, v)} />
+              <button type="submit" onSubmit={(e) => save(e, v)}>
+                Save
+              </button>
               {savingVehicleIds.find((i) => i === v.id) && (
                 <span>Saving...</span>
               )}
