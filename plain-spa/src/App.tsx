@@ -59,62 +59,7 @@ export default function Inventory() {
 
   return (
     <>
-      <Issues />
-      <h1>Vehicles For Sale</h1>
-
-      <h2>Add Vehicle</h2>
-
-      <form>
-        <input
-          type="number"
-          placeholder="Year"
-          onChange={onAddVehicleChange}
-          value={newVehicle.year || ""}
-        />{" "}
-        <input
-          type="text"
-          placeholder="Make"
-          onChange={onAddVehicleChange}
-          value={newVehicle.make}
-        />{" "}
-        <input
-          type="text"
-          placeholder="Model"
-          onChange={onAddVehicleChange}
-          value={newVehicle.model}
-        />{" "}
-        <button
-          onClick={(e) => {
-            e.preventDefault();
-            if (!newVehicle.year || !newVehicle.make || !newVehicle.model) {
-              alert("Please fill in all fields.");
-              return;
-            }
-            setIsAdding(true);
-
-            fetch("http://localhost:3001/vehicles", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(newVehicle),
-            })
-              .then((response) => response.json())
-              .then((data) => {
-                setVehicles((prev) => [...prev, data]);
-              })
-              .finally(() => {
-                setIsAdding(false);
-              });
-
-            // Reset the form
-            setNewVehicle(emptyVehicle); // Reset the form
-          }}
-        >
-          Add
-        </button>
-        {isAdding && <span>Adding...</span>}
-      </form>
+      <h2>Inventory</h2>
 
       {isLoading && <p>Loading...</p>}
       {!isLoading && vehicles.length === 0 && <p>No vehicles found.</p>}
@@ -207,6 +152,62 @@ export default function Inventory() {
           ))}
         </ul>
       </form>
+
+      <h2>Add Vehicle</h2>
+
+      <form>
+        <input
+          type="number"
+          placeholder="Year"
+          onChange={onAddVehicleChange}
+          value={newVehicle.year || ""}
+        />{" "}
+        <input
+          type="text"
+          placeholder="Make"
+          onChange={onAddVehicleChange}
+          value={newVehicle.make}
+        />{" "}
+        <input
+          type="text"
+          placeholder="Model"
+          onChange={onAddVehicleChange}
+          value={newVehicle.model}
+        />{" "}
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+            if (!newVehicle.year || !newVehicle.make || !newVehicle.model) {
+              alert("Please fill in all fields.");
+              return;
+            }
+            setIsAdding(true);
+
+            fetch("http://localhost:3001/vehicles", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(newVehicle),
+            })
+              .then((response) => response.json())
+              .then((data) => {
+                setVehicles((prev) => [...prev, data]);
+              })
+              .finally(() => {
+                setIsAdding(false);
+              });
+
+            // Reset the form
+            setNewVehicle(emptyVehicle); // Reset the form
+          }}
+        >
+          Add
+        </button>
+        {isAdding && <span>Adding...</span>}
+      </form>
+
+      <Issues />
     </>
   );
 }
