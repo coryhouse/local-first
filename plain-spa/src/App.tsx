@@ -20,7 +20,6 @@ export default function Inventory() {
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
 
   useEffect(() => {
-    console.log("Fetching vehicles...");
     fetch("http://localhost:3001/vehicles").then((response) =>
       response
         .json()
