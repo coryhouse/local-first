@@ -1,8 +1,8 @@
 export type Vehicle = {
   id: string;
-  year: number;
+  year: number | null;
   make: string;
   model: string;
-  createdAt?: Date;
-  updatedAt?: Date;
+  price: number | null;
+  sold: boolean;
 };

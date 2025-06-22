@@ -4,13 +4,17 @@
       "id": 1,
       "make": "Toyota",
       "model": "Corolla",
-      "year": 2020
+      "year": 2020,
+      "price": 20000,
+      "sold": true
     },
     {
       "id": 2,
       "make": "Infiniti",
       "model": "Q30",
-      "year": 2003
+      "year": 2003,
+      "price": 15000,
+      "sold": false
     }
   ]
 }
