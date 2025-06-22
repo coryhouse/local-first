@@ -1,0 +1,43 @@
+{
+  "name": "jazz",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "format-and-lint": "biome check .",
+    "format-and-lint:fix": "biome check . --write",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^9.7.0",
+    "@radix-ui/react-checkbox": "^1.3.2",
+    "@radix-ui/react-slot": "^1.2.3",
+    "@radix-ui/react-toast": "^1.2.14",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.1",
+    "jazz-inspector": "^0.14.28",
+    "jazz-react": "^0.14.28",
+    "jazz-tools": "^0.14.28",
+    "lucide-react": "^0.274.0",
+    "qrcode": "^1.5.3",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "react-router": "^6.16.0",
+    "react-router-dom": "^6.16.0",
+    "tailwind-merge": "^1.14.0",
+    "tailwindcss-animate": "^1.0.7",
+    "uniqolor": "^1.1.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.10",
+    "@types/qrcode": "^1.5.1",
+    "@types/react": "19.0.0",
+    "@types/react-dom": "19.0.0",
+    "@vitejs/plugin-react-swc": "^3.10.1",
+    "postcss": "^8.4.27",
+    "tailwindcss": "^4.1.10",
+    "typescript": "5.6.2",
+    "vite": "^6.3.5"
+  }
+}
