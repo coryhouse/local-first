@@ -81,7 +81,28 @@ export default function Inventory() {
         <button
           onClick={(e) => {
             e.preventDefault();
-            // TODO INSERT
+            if (!newVehicle.year || !newVehicle.make || !newVehicle.model) {
+              alert("Please fill in all fields.");
+              return;
+            }
+            setIsLoading(true);
+
+            fetch("http://localhost:3001/vehicles", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(newVehicle),
+            })
+              .then((response) => response.json())
+              .then((data) => {
+                setVehicles((prev) => [...prev, data]);
+              })
+              .finally(() => {
+                setIsLoading(false);
+              });
+
+            // Reset the form
             setNewVehicle(emptyVehicle); // Reset the form
           }}
         >

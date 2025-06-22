@@ -5,6 +5,12 @@
       "make": "Toyota",
       "model": "Corolla",
       "year": 2020
+    },
+    {
+      "id": 2,
+      "make": "Infiniti",
+      "model": "Q30",
+      "year": 2003
     }
   ]
 }
