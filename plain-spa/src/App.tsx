@@ -20,6 +20,7 @@ export default function Inventory() {
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
 
   useEffect(() => {
+    console.log("Fetching vehicles...");
     fetch("http://localhost:3001/vehicles").then((response) =>
       response
         .json()
@@ -55,28 +56,6 @@ export default function Inventory() {
           : v
       )
     );
-  }
-
-  function save(e: React.FormEvent<HTMLInputElement>, vehicle: Vehicle) {
-    e.preventDefault();
-    setSavingVehicleIds((prev) => [...prev, vehicle.id]);
-    if (vehicle.price === null || isNaN(vehicle.price)) {
-      alert("Please enter a valid number for price.");
-      return;
-    }
-    fetch(`http://localhost:3001/vehicles/${vehicle.id}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ price: vehicle.price, status: vehicle.status }),
-    })
-      .then(() => {
-        toast.success("Vehicle saved");
-      })
-      .finally(() => {
-        setSavingVehicleIds((prev) => prev.filter((id) => id !== vehicle.id));
-      });
   }
 
   return (
@@ -144,7 +123,10 @@ export default function Inventory() {
       <form>
         <ul style={{ margin: 0, padding: 0 }}>
           {vehicles.map((v) => (
-            <li style={{ listStyleType: "none", paddingLeft: "0", margin: 0 }}>
+            <li
+              key={v.id}
+              style={{ listStyleType: "none", paddingLeft: "0", margin: 0 }}
+            >
               <button
                 style={{ backgroundColor: "white" }}
                 onClick={() => {
@@ -188,7 +170,35 @@ export default function Inventory() {
                 <option value="on sale">On Sale</option>
                 <option value="sold">Sold</option>
               </select>{" "}
-              <button type="submit" onSubmit={(e) => save(e, v)}>
+              <button
+                type="submit"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setSavingVehicleIds((prev) => [...prev, v.id]);
+                  if (v.price === null || isNaN(v.price)) {
+                    alert("Please enter a valid number for price.");
+                    return;
+                  }
+                  fetch(`http://localhost:3001/vehicles/${v.id}`, {
+                    method: "PATCH",
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                      price: v.price,
+                      status: v.status,
+                    }),
+                  })
+                    .then(() => {
+                      toast.success("Vehicle saved");
+                    })
+                    .finally(() => {
+                      setSavingVehicleIds((prev) =>
+                        prev.filter((id) => id !== v.id)
+                      );
+                    });
+                }}
+              >
                 Save
               </button>
               {savingVehicleIds.find((i) => i === v.id) && (
