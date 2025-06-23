@@ -21,16 +21,16 @@
       "make": "Porsche",
       "model": "911 Turbo",
       "year": 2009,
-      "price": null,
-      "status": null
+      "price": "42395",
+      "status": "reconditioning"
     },
     {
       "id": 4,
       "make": "Nissan",
       "model": "300ZX Turbo",
       "year": 1996,
-      "price": null,
-      "status": null
+      "price": "12429",
+      "status": "on sale"
     }
   ]
 }
