@@ -19,7 +19,4 @@ export default defineSchema({
       v.literal("reconditioning"),
     ),
   }),
-  numbers: defineTable({
-    value: v.number(),
-  }),
 });
