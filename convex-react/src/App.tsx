@@ -32,8 +32,7 @@ export default function App() {
       <ul className="m-0 p-0">
         {vehicles.map((vehicle) => (
           <li key={vehicle._id} className="list-none p-0 m-2">
-            <button
-              className="bg-light dark:bg-dark text-dark dark:text-light rounded-md p-2 border-2 border-slate-200 dark:border-slate-800 mr-2"
+            <Button
               onClick={(e) => {
                 e.preventDefault();
                 void deleteVehicle({ id: vehicle._id });
@@ -41,11 +40,10 @@ export default function App() {
               }}
             >
               ❌
-            </button>
+            </Button>
             {vehicle.year} {vehicle.make} {vehicle.model} $
-            <input
+            <Input
               type="number"
-              className="bg-light w-20 dark:bg-dark text-dark dark:text-light rounded-md p-2 border-2 border-slate-200 dark:border-slate-800 mr-2"
               name="price"
               placeholder="Price"
               value={vehicle.price}
@@ -57,8 +55,7 @@ export default function App() {
                 toast.success("Vehicle updated");
               }}
             />{" "}
-            <select
-              className="bg-light dark:bg-dark text-dark dark:text-light rounded-md p-2 border-2 border-slate-200 dark:border-slate-800 mr-2"
+            <Select
               name="status"
               value={vehicle.status || ""}
               onChange={(e) => {
@@ -72,37 +69,33 @@ export default function App() {
               <option value="reconditioning">Reconditioning</option>
               <option value="on sale">On Sale</option>
               <option value="sold">Sold</option>
-            </select>{" "}
+            </Select>{" "}
           </li>
         ))}
       </ul>
 
       <h2 className="text-2xl font-bold">Add Vehicle</h2>
       <form>
-        <input
+        <Input
           type="text"
           placeholder="Make"
-          className="bg-light dark:bg-dark text-dark dark:text-light rounded-md p-2 border-2 border-slate-200 dark:border-slate-800 mr-2"
           value={newVehicle.make}
           onChange={onAddVehicleChange}
         />
-        <input
+        <Input
           type="text"
           placeholder="Model"
-          className="bg-light dark:bg-dark text-dark dark:text-light rounded-md p-2 border-2 border-slate-200 dark:border-slate-800 mr-2"
           value={newVehicle.model}
           onChange={onAddVehicleChange}
         />
-        <input
+        <Input
           type="number"
           placeholder="Year"
-          className="bg-light dark:bg-dark text-dark dark:text-light rounded-md p-2 border-2 border-slate-200 dark:border-slate-800 mr-2"
           value={newVehicle.year}
           onChange={onAddVehicleChange}
         />
-        <button
+        <Button
           type="submit"
-          className="bg-light dark:bg-dark text-dark dark:text-light rounded-md p-2 border-2 border-slate-200 dark:border-slate-800"
           onClick={(e) => {
             e.preventDefault();
             void addVehicle({
