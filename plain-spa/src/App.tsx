@@ -98,6 +98,7 @@ export default function Inventory() {
                 type="text"
                 name="price"
                 placeholder="Price"
+                style={{ width: 50 }}
                 value={v.price || ""}
                 onChange={(e) => onPriceChange(e, v)}
               />{" "}
@@ -124,6 +125,7 @@ export default function Inventory() {
               </select>{" "}
               <button
                 type="submit"
+                style={{ backgroundColor: "white" }}
                 onClick={(e) => {
                   e.preventDefault();
                   setSavingVehicleIds((prev) => [...prev, v.id]);
@@ -154,7 +156,7 @@ export default function Inventory() {
                     });
                 }}
               >
-                Save
+                💾
               </button>{" "}
               {savingVehicleIds.find((i) => i === v.id) && (
                 <span>Saving...</span>
