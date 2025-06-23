@@ -110,7 +110,7 @@ export default function App() {
           }}
         >
           Add
-        </button>
+        </Button>
       </form>
     </main>
   );
