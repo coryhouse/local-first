@@ -2,6 +2,9 @@ import { useMutation, useQuery } from "convex/react";
 import { api } from "../convex/_generated/api";
 import { useState } from "react";
 import { toast } from "react-hot-toast";
+import { Button } from "./components/Button";
+import { Input } from "./components/Input";
+import { Select } from "./components/Select";
 
 export default function App() {
   const [newVehicle, setNewVehicle] = useState({
