@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import type { Vehicle } from "./types/Vehicle";
 import toast from "react-hot-toast";
-import { Issues } from "./Issues";
 
 const emptyVehicle: Vehicle = {
   id: "",
@@ -25,6 +24,9 @@ export default function Inventory() {
         .json()
         .then((data) => {
           setVehicles(data);
+        })
+        .catch((error) => {
+          toast.error("Failed to fetch vehicles: " + error.message);
         })
         .finally(() => {
           setIsLoading(false);
@@ -57,12 +59,13 @@ export default function Inventory() {
     );
   }
 
+  if (isLoading) return <p>Loading...</p>;
+
   return (
-    <>
+    <main style={{ padding: 20 }}>
       <h2>Inventory</h2>
 
-      {isLoading && <p>Loading...</p>}
-      {!isLoading && vehicles.length === 0 && <p>No vehicles found.</p>}
+      {vehicles.length === 0 && <p>No vehicles found.</p>}
 
       <form>
         <ul style={{ margin: 0, padding: 0 }}>
@@ -73,14 +76,19 @@ export default function Inventory() {
             >
               <button
                 style={{ backgroundColor: "white" }}
-                onClick={() => {
+                onClick={(e) => {
+                  e.preventDefault();
                   fetch(`http://localhost:3001/vehicles/${v.id}`, {
                     method: "DELETE",
-                  }).then(() => {
-                    setVehicles((prev) =>
-                      prev.filter((vehicle) => vehicle.id !== v.id)
-                    );
-                  });
+                  })
+                    .then(() => {
+                      setVehicles((prev) =>
+                        prev.filter((vehicle) => vehicle.id !== v.id)
+                      );
+                    })
+                    .catch((error) => {
+                      toast.error("Failed to delete vehicle: " + error.message);
+                    });
                 }}
               >
                 ❌
@@ -120,7 +128,7 @@ export default function Inventory() {
                   e.preventDefault();
                   setSavingVehicleIds((prev) => [...prev, v.id]);
                   if (v.price === null || isNaN(v.price)) {
-                    alert("Please enter a valid number for price.");
+                    toast.error("Please enter a valid number for price.");
                     return;
                   }
                   fetch(`http://localhost:3001/vehicles/${v.id}`, {
@@ -136,6 +144,9 @@ export default function Inventory() {
                     .then(() => {
                       toast.success("Vehicle saved");
                     })
+                    .catch((error) => {
+                      toast.error("Failed to save vehicle: " + error.message);
+                    })
                     .finally(() => {
                       setSavingVehicleIds((prev) =>
                         prev.filter((id) => id !== v.id)
@@ -144,7 +155,7 @@ export default function Inventory() {
                 }}
               >
                 Save
-              </button>
+              </button>{" "}
               {savingVehicleIds.find((i) => i === v.id) && (
                 <span>Saving...</span>
               )}
@@ -178,7 +189,7 @@ export default function Inventory() {
           onClick={(e) => {
             e.preventDefault();
             if (!newVehicle.year || !newVehicle.make || !newVehicle.model) {
-              alert("Please fill in all fields.");
+              toast.error("Please fill in all fields.");
               return;
             }
             setIsAdding(true);
@@ -193,21 +204,20 @@ export default function Inventory() {
               .then((response) => response.json())
               .then((data) => {
                 setVehicles((prev) => [...prev, data]);
+                setNewVehicle(emptyVehicle); // Reset the form
+              })
+              .catch((error) => {
+                toast.error("Failed to add vehicle: " + error.message);
               })
               .finally(() => {
                 setIsAdding(false);
               });
-
-            // Reset the form
-            setNewVehicle(emptyVehicle); // Reset the form
           }}
         >
           Add
         </button>
         {isAdding && <span>Adding...</span>}
       </form>
-
-      <Issues />
-    </>
+    </main>
   );
 }
