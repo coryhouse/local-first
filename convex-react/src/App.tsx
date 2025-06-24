@@ -50,6 +50,7 @@ export default function App() {
               name="price"
               placeholder="Price"
               value={vehicle.price}
+              className="w-20"
               onBlur={(e) => {
                 void updateVehicle({
                   ...vehicle,
