@@ -60,7 +60,7 @@ export default function App() {
             />{" "}
             <Select
               name="status"
-              value={vehicle.status || ""}
+              value={vehicle.status}
               onChange={(e) => {
                 void updateVehicle({
                   ...vehicle,
