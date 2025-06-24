@@ -1,10 +1,11 @@
 import { useMutation, useQuery } from "convex/react";
 import { api } from "../convex/_generated/api";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { Button } from "./components/Button";
 import { Input } from "./components/Input";
 import { Select } from "./components/Select";
+import { Doc } from "../convex/_generated/dataModel";
 
 export default function App() {
   const [newVehicle, setNewVehicle] = useState({
@@ -12,10 +13,23 @@ export default function App() {
     model: "",
     year: "",
   });
-  const vehicles = useQuery(api.myFunctions.listVehicles);
+
+  type Vehicle = Doc<"vehicles">;
+
+  const vehiclesInDb = useQuery(api.myFunctions.listVehicles);
+  const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const deleteVehicle = useMutation(api.myFunctions.deleteVehicle);
   const addVehicle = useMutation(api.myFunctions.addVehicle);
   const updateVehicle = useMutation(api.myFunctions.updateVehicle);
+
+  useEffect(
+    function copyDbToLocalState() {
+      if (vehiclesInDb) {
+        setVehicles(vehiclesInDb);
+      }
+    },
+    [vehiclesInDb],
+  );
 
   function onAddVehicleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { value } = e.target;
@@ -26,7 +40,12 @@ export default function App() {
     }));
   }
 
-  if (vehicles === undefined) {
+  function saveVehicle(vehicle: Vehicle) {
+    void updateVehicle(vehicle);
+    toast.success("Vehicle updated");
+  }
+
+  if (vehiclesInDb === undefined) {
     return <div>Loading...</div>;
   }
 
@@ -51,29 +70,40 @@ export default function App() {
               placeholder="Price"
               value={vehicle.price}
               className="w-20"
-              onBlur={(e) => {
-                void updateVehicle({
-                  ...vehicle,
-                  price: parseInt(e.target.value),
-                });
-                toast.success("Vehicle updated");
+              onChange={(e) => {
+                setVehicles((prev) =>
+                  prev.map((v) =>
+                    v._id === vehicle._id
+                      ? { ...v, price: parseInt(e.target.value) }
+                      : v,
+                  ),
+                );
               }}
             />{" "}
             <Select
               name="status"
               value={vehicle.status}
               onChange={(e) => {
-                void updateVehicle({
-                  ...vehicle,
-                  status: e.target.value as any,
-                });
-                toast.success("Vehicle updated");
+                setVehicles((prev) =>
+                  prev.map((v) =>
+                    v._id === vehicle._id
+                      ? {
+                          ...v,
+                          status: e.target.value as
+                            | "on sale"
+                            | "sold"
+                            | "reconditioning",
+                        }
+                      : v,
+                  ),
+                );
               }}
             >
               <option value="reconditioning">Reconditioning</option>
               <option value="on sale">On Sale</option>
               <option value="sold">Sold</option>
             </Select>{" "}
+            <Button onClick={() => saveVehicle(vehicle)}>Save</Button>
           </li>
         ))}
       </ul>
