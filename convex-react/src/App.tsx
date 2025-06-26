@@ -16,11 +16,11 @@ export default function App() {
 
   type Vehicle = Doc<"vehicles">;
 
-  const vehiclesInDb = useQuery(api.myFunctions.listVehicles);
+  const vehiclesInDb = useQuery(api.vehicles.list);
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
-  const deleteVehicle = useMutation(api.myFunctions.deleteVehicle);
-  const addVehicle = useMutation(api.myFunctions.addVehicle);
-  const updateVehicle = useMutation(api.myFunctions.updateVehicle);
+  const deleteVehicle = useMutation(api.vehicles.deleteVehicle);
+  const addVehicle = useMutation(api.vehicles.add);
+  const updateVehicle = useMutation(api.vehicles.update);
 
   useEffect(
     function copyDbToLocalState() {
