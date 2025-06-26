@@ -57,6 +57,9 @@ export default function App() {
             <Button
               onClick={(e) => {
                 e.preventDefault();
+                setVehicles((prev) =>
+                  prev.filter((v) => v._id !== vehicle._id),
+                );
                 void deleteVehicle({ id: vehicle._id });
                 toast.success("Vehicle deleted");
               }}
