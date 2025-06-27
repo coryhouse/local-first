@@ -53,7 +53,10 @@ export default function App() {
     <main className="p-8 flex flex-col gap-16">
       <ul className="m-0 p-0">
         {vehicles.map((vehicle) => (
-          <li key={vehicle._id} className="list-none p-0 m-2">
+          <li
+            key={vehicle._id}
+            className="list-none p-0 m-2 flex items-center gap-2"
+          >
             <Button
               onClick={(e) => {
                 e.preventDefault();
@@ -66,7 +69,11 @@ export default function App() {
             >
               ❌
             </Button>
-            {vehicle.year} {vehicle.make} {vehicle.model} $
+            <span className="flex-1">
+              {vehicle.year} {vehicle.make} {vehicle.model}
+            </span>
+            <span className="flex items-center gap-2">
+              $
             <Input
               type="number"
               name="price"
@@ -82,7 +89,7 @@ export default function App() {
                   ),
                 );
               }}
-            />{" "}
+              />
             <Select
               name="status"
               value={vehicle.status}
@@ -105,8 +112,9 @@ export default function App() {
               <option value="reconditioning">Reconditioning</option>
               <option value="on sale">On Sale</option>
               <option value="sold">Sold</option>
-            </Select>{" "}
+              </Select>
             <Button onClick={() => saveVehicle(vehicle)}>Save</Button>
+            </span>
           </li>
         ))}
       </ul>
