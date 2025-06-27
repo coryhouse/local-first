@@ -50,7 +50,7 @@ export default function App() {
   }
 
   return (
-    <main className="p-8 flex flex-col gap-16">
+    <main className="p-8 flex flex-col gap-16 max-w-3xl">
       <ul className="m-0 p-0">
         {vehicles.map((vehicle) => (
           <li
