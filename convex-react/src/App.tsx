@@ -41,7 +41,8 @@ export default function App() {
   }
 
   function saveVehicle(vehicle: Vehicle) {
-    void updateVehicle(vehicle);
+    const { _creationTime, ...vehicleWithoutCreationTime } = vehicle;
+    void updateVehicle(vehicleWithoutCreationTime);
     toast.success("Vehicle updated");
   }
 
