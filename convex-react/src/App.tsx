@@ -52,6 +52,7 @@ export default function App() {
 
   return (
     <main className="p-8 flex flex-col gap-8 max-w-3xl">
+      <h1 className="text-3xl font-bold">Crazy Cory's Car Lot</h1>
       <ul className="m-0 p-0">
         {vehicles.map((vehicle) => (
           <li
