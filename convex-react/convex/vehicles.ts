@@ -40,7 +40,6 @@ export const add = mutation({
 export const update = mutation({
   args: {
     _id: v.id("vehicles"),
-    _creationTime: v.number(),
     make: v.string(),
     model: v.string(),
     year: v.number(),
