@@ -10,12 +10,14 @@ export default function App() {
   });
 
   return (
-    <ul>
-      {scores.map((score) => (
-        <li key={score.id}>
-          {score.name}: {score.value}
-        </li>
-      ))}
-    </ul>
+    <main className="p-8 flex flex-col gap-8 max-w-3xl">
+      <ul>
+        {scores.map((score) => (
+          <li key={score.id}>
+            {score.name}: {score.value}
+          </li>
+        ))}
+      </ul>
+    </main>
   );
 }
