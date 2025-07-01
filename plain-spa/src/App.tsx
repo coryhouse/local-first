@@ -77,7 +77,7 @@ export default function Inventory() {
               key={v.id}
               className="list-none p-0 m-2 flex items-center gap-2"
             >
-              <button
+              <Button
                 style={{ backgroundColor: "white" }}
                 onClick={(e) => {
                   e.preventDefault();
@@ -95,11 +95,12 @@ export default function Inventory() {
                 }}
               >
                 ❌
-              </button>
+              </Button>
               <span className="flex-1">
                 {v.year} {v.make} {v.model}
               </span>
               <span className="flex items-center gap-2">
+                ${" "}
                 <Input
                   type="text"
                   name="price"
