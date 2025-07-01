@@ -52,7 +52,7 @@ export default function App() {
 
   return (
     <main className="p-8 flex flex-col gap-8 max-w-3xl">
-      <h1 className="text-3xl font-bold">Crazy Cory's Car Lot</h1>
+      <h1 className="text-3xl font-bold">Crazy Cory's Car Lot (Convex)</h1>
       <ul className="m-0 p-0">
         {vehicles.map((vehicle) => (
           <li
@@ -125,6 +125,12 @@ export default function App() {
         <h2 className="text-2xl font-bold">Add Vehicle</h2>
         <form>
           <Input
+            type="number"
+            placeholder="Year"
+            value={newVehicle.year}
+            onChange={onAddVehicleChange}
+          />
+          <Input
             type="text"
             placeholder="Make"
             value={newVehicle.make}
@@ -134,12 +140,6 @@ export default function App() {
             type="text"
             placeholder="Model"
             value={newVehicle.model}
-            onChange={onAddVehicleChange}
-          />
-          <Input
-            type="number"
-            placeholder="Year"
-            value={newVehicle.year}
             onChange={onAddVehicleChange}
           />
           <Button
