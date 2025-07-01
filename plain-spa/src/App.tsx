@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import type { Vehicle } from "./types/Vehicle";
 import toast from "react-hot-toast";
+import { Input } from "./components/Input";
+import { Button } from "./components/Button";
+import { Select } from "./components/Select";
 
 const emptyVehicle: Vehicle = {
   id: "",
@@ -62,17 +65,17 @@ export default function Inventory() {
   if (isLoading) return <p>Loading...</p>;
 
   return (
-    <main style={{ padding: 20 }}>
-      <h2>Inventory</h2>
+    <main className="p-8 flex flex-col gap-8 max-w-3xl">
+      <h1 className="text-3xl font-bold">Crazy Cory's Car Lot (Plain SPA)</h1>
 
       {vehicles.length === 0 && <p>No vehicles found.</p>}
 
       <form>
-        <ul style={{ margin: 0, padding: 0 }}>
+        <ul className="m-0 p-0">
           {vehicles.map((v) => (
             <li
               key={v.id}
-              style={{ listStyleType: "none", paddingLeft: "0", margin: 0 }}
+              className="list-none p-0 m-2 flex items-center gap-2"
             >
               <button
                 style={{ backgroundColor: "white" }}
@@ -93,133 +96,139 @@ export default function Inventory() {
               >
                 ❌
               </button>
-              {`${v.year} ${v.make} ${v.model} -`}${" "}
-              <input
-                type="text"
-                name="price"
-                placeholder="Price"
-                style={{ width: 50 }}
-                value={v.price || ""}
-                onChange={(e) => onPriceChange(e, v)}
-              />{" "}
-              <select
-                name="status"
-                value={v.status || ""}
-                onChange={(e) => {
-                  setVehicles((prev) =>
-                    prev.map((vehicle) =>
-                      vehicle.id === v.id
-                        ? {
-                            ...vehicle,
-                            status: e.target.value as Vehicle["status"],
-                          }
-                        : vehicle
-                    )
-                  );
-                }}
-              >
-                <option value="">Status</option>
-                <option value="reconditioning">Reconditioning</option>
-                <option value="on sale">On Sale</option>
-                <option value="sold">Sold</option>
-              </select>{" "}
-              <button
-                type="submit"
-                style={{ backgroundColor: "white" }}
-                onClick={(e) => {
-                  e.preventDefault();
-                  setSavingVehicleIds((prev) => [...prev, v.id]);
-                  if (v.price === null || isNaN(v.price)) {
-                    toast.error("Please enter a valid number for price.");
-                    return;
-                  }
-                  fetch(`http://localhost:3001/vehicles/${v.id}`, {
-                    method: "PATCH",
-                    headers: {
-                      "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                      price: v.price,
-                      status: v.status,
-                    }),
-                  })
-                    .then(() => {
-                      toast.success("Vehicle saved");
+              <span className="flex-1">
+                {v.year} {v.make} {v.model}
+              </span>
+              <span className="flex items-center gap-2">
+                <Input
+                  type="text"
+                  name="price"
+                  placeholder="Price"
+                  className="w-20"
+                  value={v.price || ""}
+                  onChange={(e) => onPriceChange(e, v)}
+                />{" "}
+                <Select
+                  name="status"
+                  value={v.status || ""}
+                  onChange={(e) => {
+                    setVehicles((prev) =>
+                      prev.map((vehicle) =>
+                        vehicle.id === v.id
+                          ? {
+                              ...vehicle,
+                              status: e.target.value as Vehicle["status"],
+                            }
+                          : vehicle
+                      )
+                    );
+                  }}
+                >
+                  <option value="">Status</option>
+                  <option value="reconditioning">Reconditioning</option>
+                  <option value="on sale">On Sale</option>
+                  <option value="sold">Sold</option>
+                </Select>{" "}
+                <Button
+                  type="submit"
+                  style={{ backgroundColor: "white" }}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setSavingVehicleIds((prev) => [...prev, v.id]);
+                    if (v.price === null || isNaN(v.price)) {
+                      toast.error("Please enter a valid number for price.");
+                      return;
+                    }
+                    fetch(`http://localhost:3001/vehicles/${v.id}`, {
+                      method: "PATCH",
+                      headers: {
+                        "Content-Type": "application/json",
+                      },
+                      body: JSON.stringify({
+                        price: v.price,
+                        status: v.status,
+                      }),
                     })
-                    .catch((error) => {
-                      toast.error("Failed to save vehicle: " + error.message);
-                    })
-                    .finally(() => {
-                      setSavingVehicleIds((prev) =>
-                        prev.filter((id) => id !== v.id)
-                      );
-                    });
-                }}
-              >
-                💾
-              </button>{" "}
-              {savingVehicleIds.find((i) => i === v.id) && (
-                <span>Saving...</span>
-              )}
+                      .then(() => {
+                        toast.success("Vehicle saved");
+                      })
+                      .catch((error) => {
+                        toast.error("Failed to save vehicle: " + error.message);
+                      })
+                      .finally(() => {
+                        setSavingVehicleIds((prev) =>
+                          prev.filter((id) => id !== v.id)
+                        );
+                      });
+                  }}
+                >
+                  Save
+                </Button>{" "}
+                {savingVehicleIds.find((i) => i === v.id) && (
+                  <span>Saving...</span>
+                )}
+              </span>
             </li>
           ))}
         </ul>
       </form>
 
-      <h2>Add Vehicle</h2>
+      <div className="flex flex-col gap-4">
+        <h2 className="text-2xl font-bold">Add Vehicle</h2>
 
-      <form>
-        <input
-          type="number"
-          placeholder="Year"
-          onChange={onAddVehicleChange}
-          value={newVehicle.year || ""}
-        />{" "}
-        <input
-          type="text"
-          placeholder="Make"
-          onChange={onAddVehicleChange}
-          value={newVehicle.make}
-        />{" "}
-        <input
-          type="text"
-          placeholder="Model"
-          onChange={onAddVehicleChange}
-          value={newVehicle.model}
-        />{" "}
-        <button
-          onClick={(e) => {
-            e.preventDefault();
-            if (!newVehicle.year || !newVehicle.make || !newVehicle.model) {
-              toast.error("Please fill in all fields.");
-              return;
-            }
-            setIsAdding(true);
+        <form>
+          <Input
+            type="number"
+            placeholder="Year"
+            onChange={onAddVehicleChange}
+            value={newVehicle.year || ""}
+          />{" "}
+          <Input
+            type="text"
+            placeholder="Make"
+            onChange={onAddVehicleChange}
+            value={newVehicle.make}
+          />{" "}
+          <Input
+            type="text"
+            placeholder="Model"
+            onChange={onAddVehicleChange}
+            value={newVehicle.model}
+          />{" "}
+          <Button
+            onClick={(e) => {
+              e.preventDefault();
+              if (!newVehicle.year || !newVehicle.make || !newVehicle.model) {
+                toast.error("Please fill in all fields.");
+                return;
+              }
+              setIsAdding(true);
 
-            fetch("http://localhost:3001/vehicles", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(newVehicle),
-            })
-              .then((response) => response.json())
-              .then((data) => {
-                setVehicles((prev) => [...prev, data]);
-                setNewVehicle(emptyVehicle); // Reset the form
+              fetch("http://localhost:3001/vehicles", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify(newVehicle),
               })
-              .catch((error) => {
-                toast.error("Failed to add vehicle: " + error.message);
-              })
-              .finally(() => {
-                setIsAdding(false);
-              });
-          }}
-        >
-          Add
-        </button>
-        {isAdding && <span>Adding...</span>}
-      </form>
+                .then((response) => response.json())
+                .then((data) => {
+                  setVehicles((prev) => [...prev, data]);
+                  setNewVehicle(emptyVehicle); // Reset the form
+                })
+                .catch((error) => {
+                  toast.error("Failed to add vehicle: " + error.message);
+                })
+                .finally(() => {
+                  setIsAdding(false);
+                });
+            }}
+          >
+            Add
+          </Button>
+          {isAdding && <span>Adding...</span>}
+        </form>
+      </div>
     </main>
   );
 }
