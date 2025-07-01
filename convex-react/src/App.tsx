@@ -76,90 +76,101 @@ export default function App() {
             </span>
             <span className="flex items-center gap-2">
               $
-            <Input
-              type="number"
-              name="price"
-              placeholder="Price"
-              value={vehicle.price}
-              className="w-20"
-              onChange={(e) => {
-                setVehicles((prev) =>
-                  prev.map((v) =>
-                    v._id === vehicle._id
-                      ? { ...v, price: parseInt(e.target.value) }
-                      : v,
-                  ),
-                );
-              }}
+              <Input
+                type="number"
+                name="price"
+                placeholder="Price"
+                value={vehicle.price}
+                className="w-20"
+                onChange={(e) => {
+                  setVehicles((prev) =>
+                    prev.map((v) =>
+                      v._id === vehicle._id
+                        ? { ...v, price: parseInt(e.target.value) }
+                        : v,
+                    ),
+                  );
+                }}
               />
-            <Select
-              name="status"
-              value={vehicle.status}
-              onChange={(e) => {
-                setVehicles((prev) =>
-                  prev.map((v) =>
-                    v._id === vehicle._id
-                      ? {
-                          ...v,
-                          status: e.target.value as
-                            | "on sale"
-                            | "sold"
-                            | "reconditioning",
-                        }
-                      : v,
-                  ),
-                );
-              }}
-            >
-              <option value="reconditioning">Reconditioning</option>
-              <option value="on sale">On Sale</option>
-              <option value="sold">Sold</option>
+              <Select
+                name="status"
+                value={vehicle.status}
+                onChange={(e) => {
+                  setVehicles((prev) =>
+                    prev.map((v) =>
+                      v._id === vehicle._id
+                        ? {
+                            ...v,
+                            status: e.target.value as
+                              | "on sale"
+                              | "sold"
+                              | "reconditioning",
+                          }
+                        : v,
+                    ),
+                  );
+                }}
+              >
+                <option value="reconditioning">Reconditioning</option>
+                <option value="on sale">On Sale</option>
+                <option value="sold">Sold</option>
               </Select>
-            <Button onClick={() => saveVehicle(vehicle)}>Save</Button>
+              <Button onClick={() => saveVehicle(vehicle)}>Save</Button>
             </span>
           </li>
         ))}
       </ul>
 
       <div className="flex flex-col gap-4">
-      <h2 className="text-2xl font-bold">Add Vehicle</h2>
-      <form>
-        <Input
-          type="text"
-          placeholder="Make"
-          value={newVehicle.make}
-          onChange={onAddVehicleChange}
-        />
-        <Input
-          type="text"
-          placeholder="Model"
-          value={newVehicle.model}
-          onChange={onAddVehicleChange}
-        />
-        <Input
-          type="number"
-          placeholder="Year"
-          value={newVehicle.year}
-          onChange={onAddVehicleChange}
-        />
-        <Button
-          type="submit"
-          onClick={(e) => {
-            e.preventDefault();
-            void addVehicle({
-              make: newVehicle.make,
-              model: newVehicle.model,
-              year: Number(newVehicle.year),
-              price: 0,
-              status: "reconditioning",
-            });
-            setNewVehicle({ make: "", model: "", year: "" });
-            toast.success("Vehicle added");
-          }}
-        >
-          Add
-        </Button>
-      </form>
+        <h2 className="text-2xl font-bold">Add Vehicle</h2>
+        <form>
+          <Input
+            type="text"
+            placeholder="Make"
+            value={newVehicle.make}
+            onChange={onAddVehicleChange}
+          />
+          <Input
+            type="text"
+            placeholder="Model"
+            value={newVehicle.model}
+            onChange={onAddVehicleChange}
+          />
+          <Input
+            type="number"
+            placeholder="Year"
+            value={newVehicle.year}
+            onChange={onAddVehicleChange}
+          />
+          <Button
+            type="submit"
+            onClick={(e) => {
+              e.preventDefault();
+              if (!navigator.onLine) {
+                // NOTE: Convex doesn't support local ID allocation yet.
+                // Ideally, we'd do something like this:
+                // _id: (crypto.randomUUID() as Id<"vehicles">,
+                // More: https://stack.convex.dev/object-sync-engine#convex-2
+                toast.error(
+                  "You're offline. Please try again later. (Convex doesn't support offline add yet.)",
+                );
+                return;
+              }
+
+              void addVehicle({
+                make: newVehicle.make,
+                model: newVehicle.model,
+                year: Number(newVehicle.year),
+                price: 0,
+                status: "reconditioning",
+              });
+              setNewVehicle({ make: "", model: "", year: "" });
+              toast.success("Vehicle added");
+            }}
+          >
+            Add
+          </Button>
+        </form>
       </div>
     </main>
   );
