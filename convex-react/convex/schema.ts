@@ -8,7 +8,6 @@ import { authTables } from "@convex-dev/auth/server";
 export default defineSchema({
   ...authTables,
   vehicles: defineTable({
-    _id: v.id("vehicles"),
     make: v.string(),
     model: v.string(),
     year: v.number(),
