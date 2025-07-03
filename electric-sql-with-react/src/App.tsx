@@ -6,6 +6,7 @@ import { Button } from "./components/Button";
 import { Input } from "./components/Input";
 import { Select } from "./components/Select";
 import api from "./client";
+import { ELECTRIC_URL } from "./config";
 
 export default function App() {
   const [newVehicle, setNewVehicle] = useState({
@@ -15,7 +16,7 @@ export default function App() {
   });
 
   const { isLoading, data: vehiclesInDb } = useShape<Vehicle>({
-    url: `http://localhost:3000/v1/shape`,
+    url: `${ELECTRIC_URL}/v1/shape`,
     params: {
       table: `vehicles`,
     },
@@ -42,7 +43,7 @@ export default function App() {
   }
 
   async function saveVehicle(vehicle: Vehicle) {
-    await api.request("/vehicles", "PUT", vehicle);
+    await api.request(`${ELECTRIC_URL}/vehicles/${vehicle.id}`, "PUT", vehicle);
     toast.success("Vehicle updated");
   }
 
@@ -80,7 +81,11 @@ export default function App() {
               onClick={async (e) => {
                 e.preventDefault();
                 setVehicles((prev) => prev.filter((v) => v.id !== vehicle.id));
-                await api.request("/vehicles", "DELETE", vehicle);
+                await api.request(
+                  `${ELECTRIC_URL}/vehicles/${vehicle.id}`,
+                  "DELETE",
+                  vehicle
+                );
                 toast.success("Vehicle deleted");
               }}
             >
@@ -168,7 +173,7 @@ export default function App() {
                 price: 0,
                 status: "reconditioning",
               };
-              await api.request("/vehicles", "POST", vehicle);
+              await api.request(`${ELECTRIC_URL}/vehicles`, "POST", vehicle);
               setNewVehicle({ make: "", model: "", year: "" });
               toast.success("Vehicle added");
             }}
