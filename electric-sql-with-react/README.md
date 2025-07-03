@@ -1,54 +1,28 @@
-# React + TypeScript + Vite
+# Quick Start
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+These steps are similar to the [Electric SQL Quickstart](https://electric-sql.com/docs/quickstart), but the table structures are different to match the car lot demo app.
 
-Currently, two official plugins are available:
+1. Install Postgres `brew install postgres@16`
+2. Get Docker container: `curl -O https://electric-sql.com/docker-compose.yaml`
+3. Start Docker container: `docker compose up`. You now have a local Postgres DB called electric running in Docker.
+4. Connect to the DB via psql: `psql "postgresql://postgres:password@localhost:54321/electric"`. You're now on an Electric SQL shell.
+5. Create `vehicles` table:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+```sql
+CREATE TABLE vehicles (
+  id SERIAL PRIMARY KEY,
+  make VARCHAR(255) NOT NULL,
+  model VARCHAR(255) NOT NULL,
+  year INT NOT NULL,
+  price INT NOT NULL,
+  status VARCHAR(255) NOT NULL
+);
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+6. Populate `vehicles` table:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+```sql
+INSERT INTO vehicles (make, model, year, price, status) VALUES
+  ('Toyota', 'Camry', 2020, 25000, 'on sale'),
+  ('Honda', 'Civic', 2021, 20000, 'on sale');
 ```
