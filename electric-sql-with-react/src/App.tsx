@@ -1,5 +1,5 @@
 import { useShape } from "@electric-sql/react";
-import type { Vehicle } from "./types/score";
+import type { Vehicle } from "./types/vehicle";
 import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { Button } from "./components/Button";
