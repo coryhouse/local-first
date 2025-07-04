@@ -4,5 +4,8 @@ import tailwindcss from "@tailwindcss/vite";
 
 // https://vite.dev/config/
 export default defineConfig({
+  optimizeDeps: {
+    exclude: ["@electric-sql/pglite"],
+  },
   plugins: [react(), tailwindcss()],
 });
