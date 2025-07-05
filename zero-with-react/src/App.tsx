@@ -1,251 +1,178 @@
-import { escapeLike } from "@rocicorp/zero";
 import { useQuery, useZero } from "@rocicorp/zero/react";
-import Cookies from "js-cookie";
-import { useState } from "react";
-import { formatDate } from "./date";
-import { randInt } from "./rand";
-import { RepeatButton } from "./repeat-button";
-import { schema, Schema } from "./schema";
-import { randomMessage } from "./test-data";
+import type { Schema, Vehicle } from "./schema";
+import { useEffect, useState } from "react";
+import { toast } from "react-hot-toast";
+import { Button } from "./components/Button";
+import { Input } from "./components/Input";
+import { Select } from "./components/Select";
+import { randID } from "./rand";
 
-function App() {
+export default function App() {
   const z = useZero<Schema>();
-  const [users] = useQuery(z.query.user, {
+
+  const [vehiclesInDb] = useQuery(z.query.vehicle, {
     ttl: "5m",
   });
 
-  const [mediums] = useQuery(z.query.medium, {
-    ttl: "5m",
+  const [newVehicle, setNewVehicle] = useState({
+    make: "",
+    model: "",
+    year: "",
   });
 
-  const [filterUser, setFilterUser] = useState("");
-  const [filterText, setFilterText] = useState("");
+  const [vehicles, setVehicles] = useState<Vehicle[]>([]);
 
-  const all = z.query.message;
-  const [allMessages] = useQuery(all, {
-    ttl: "5m",
-  });
+  useEffect(
+    function copyDbToLocalState() {
+      if (vehiclesInDb) {
+        setVehicles(vehiclesInDb);
+      }
+    },
+    [vehiclesInDb]
+  );
 
-  let filtered = all
-    .related("medium")
-    .related("sender")
-    .orderBy("timestamp", "desc");
-
-  if (filterUser) {
-    filtered = filtered.where("senderID", filterUser);
+  function onAddVehicleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const { value } = e.target;
+    setNewVehicle((prev) => ({
+      ...prev,
+      [e.target.placeholder.toLowerCase()]:
+        e.target.type === "number" ? Number(value) : value,
+    }));
   }
 
-  if (filterText) {
-    filtered = filtered.where("body", "LIKE", `%${escapeLike(filterText)}%`);
+  async function saveVehicle(vehicle: Vehicle) {
+    z.mutate.vehicle.update(vehicle);
+    toast.success("Vehicle updated");
   }
-
-  const [filteredMessages] = useQuery(filtered);
-
-  const hasFilters = filterUser || filterText;
-
-  // If initial sync hasn't completed, these can be empty.
-  if (!users.length || !mediums.length) {
-    return null;
-  }
-
-  const viewer = users.find((user) => user.id === z.userID);
 
   return (
-    <>
-      <div className="controls">
-        <div>
-          <RepeatButton
-            onTrigger={() => {
-              z.mutate.message.insert(randomMessage(users, mediums));
-            }}
-          >
-            Add Messages
-          </RepeatButton>
-          <RepeatButton
-            onTrigger={(e) => {
-              if (!viewer && !e.shiftKey) {
-                alert(
-                  "You must be logged in to delete. Hold shift to try anyway."
-                );
-                return false;
-              }
-              if (allMessages.length === 0) {
-                alert("No messages to remove");
-                return false;
-              }
+    <main className="p-8 flex flex-col gap-8 max-w-3xl">
+      <h1 className="text-3xl font-bold">
+        Crazy Cory's Car Lot (Electric SQL)
+      </h1>
+      <details>
+        <summary>
+          Note: Electric supports{" "}
+          <a href="https://electric-sql.com/docs/guides/writes#patterns">
+            multiple write styles
+          </a>{" "}
+        </summary>
+        <ol>
+          <li className="list-decimal ml-4">
+            <strong>Online writes</strong> (simplest, but only works online.)
+            Good for occasional writes or read only apps. (this demo uses this)
+          </li>
+        </ol>
+      </details>
 
-              const index = randInt(allMessages.length);
-              z.mutate.message.delete({ id: allMessages[index].id });
-              return true;
-            }}
+      <ul className="m-0 p-0">
+        {vehicles.map((vehicle) => (
+          <li
+            key={vehicle.id}
+            className="list-none p-0 m-2 flex items-center gap-2"
           >
-            Remove Messages
-          </RepeatButton>
-          <em>(hold down buttons to repeat)</em>
-        </div>
-        <div
-          style={{
-            justifyContent: "end",
-          }}
-        >
-          {viewer && `Logged in as ${viewer.name}`}
-          {viewer ? (
-            <button
-              onMouseDown={() => {
-                Cookies.remove("jwt");
-                location.reload();
+            <Button
+              onClick={async (e) => {
+                e.preventDefault();
+                setVehicles((prev) => prev.filter((v) => v.id !== vehicle.id));
+                z.mutate.vehicle.delete({ id: vehicle.id });
+                toast.success("Vehicle deleted");
               }}
             >
-              Logout
-            </button>
-          ) : (
-            <button
-              onMouseDown={() => {
-                fetch("/api/login")
-                  .then(() => {
-                    location.reload();
-                  })
-                  .catch((error) => {
-                    alert(`Failed to login: ${error.message}`);
-                  });
-              }}
-            >
-              Login
-            </button>
-          )}
-          <button
-            onMouseDown={async () => {
-              alert("Open dev tools console tab to view inspector output.");
-              const inspector = await z.inspect();
-              const client = inspector.client;
+              ❌
+            </Button>
+            <span className="flex-1">
+              {vehicle.year} {vehicle.make} {vehicle.model}
+            </span>
+            <span className="flex items-center gap-2">
+              $
+              <Input
+                type="number"
+                name="price"
+                placeholder="Price"
+                value={vehicle.price}
+                className="w-20"
+                onChange={(e) => {
+                  setVehicles((prev) =>
+                    prev.map((v) =>
+                      v.id === vehicle.id
+                        ? { ...v, price: parseInt(e.target.value) }
+                        : v
+                    )
+                  );
+                }}
+              />
+              <Select
+                name="status"
+                value={vehicle.status}
+                onChange={(e) => {
+                  setVehicles((prev) =>
+                    prev.map((v) =>
+                      v.id === vehicle.id
+                        ? {
+                            ...v,
+                            status: e.target.value as
+                              | "on sale"
+                              | "sold"
+                              | "reconditioning",
+                          }
+                        : v
+                    )
+                  );
+                }}
+              >
+                <option value="reconditioning">Reconditioning</option>
+                <option value="on sale">On Sale</option>
+                <option value="sold">Sold</option>
+              </Select>
+              <Button onClick={() => saveVehicle(vehicle)}>Save</Button>
+            </span>
+          </li>
+        ))}
+      </ul>
 
-              const style =
-                "background-color: darkblue; color: white; font-style: italic; font-size: 2em;";
-              console.log("%cPrinting inspector output...", style);
-              console.log(
-                "%cTo see pretty tables, leave devtools open, then press 'Inspect' button in main UI again.",
-                style
-              );
-              console.log(
-                "%cSorry this is so ghetto I was too tired to make a debug dialog.",
-                style
-              );
-
-              console.log("client:");
-              console.log(client);
-              console.log("client group:");
-              console.log(client.clientGroup);
-              console.log("client map:");
-              console.log(await client.map());
-              for (const tableName of Object.keys(schema.tables)) {
-                console.log(`table ${tableName}:`);
-                console.table(await client.rows(tableName));
-              }
-              console.log("client queries:");
-              console.table(await client.queries());
-              console.log("client group queries:");
-              console.table(await client.clientGroup.queries());
-              console.log("all clients in group");
-              console.table(await client.clientGroup.clients());
-            }}
-          >
-            Inspect
-          </button>
-        </div>
-      </div>
-      <div className="controls">
-        <div>
-          From:
-          <select
-            onChange={(e) => setFilterUser(e.target.value)}
-            style={{ flex: 1 }}
-          >
-            <option key={""} value="">
-              Sender
-            </option>
-            {users.map((user) => (
-              <option key={user.id} value={user.id}>
-                {user.name}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div>
-          Contains:
-          <input
-            type="text"
-            placeholder="message"
-            onChange={(e) => setFilterText(e.target.value)}
-            style={{ flex: 1 }}
+      <div className="flex flex-col gap-4">
+        <h2 className="text-2xl font-bold">Add Vehicle</h2>
+        <form>
+          <Input
+            type="number"
+            placeholder="Year"
+            value={newVehicle.year}
+            onChange={onAddVehicleChange}
           />
-        </div>
+          <Input
+            type="text"
+            placeholder="Make"
+            value={newVehicle.make}
+            onChange={onAddVehicleChange}
+          />
+          <Input
+            type="text"
+            placeholder="Model"
+            value={newVehicle.model}
+            onChange={onAddVehicleChange}
+          />
+          <Button
+            type="submit"
+            onClick={async (e) => {
+              e.preventDefault();
+              const vehicle = {
+                id: randID(),
+                make: newVehicle.make,
+                model: newVehicle.model,
+                year: Number(newVehicle.year),
+                price: 0,
+                status: "reconditioning",
+              };
+              z.mutate.vehicle.insert(vehicle);
+              setNewVehicle({ make: "", model: "", year: "" });
+              toast.success("Vehicle added");
+            }}
+          >
+            Add
+          </Button>
+        </form>
       </div>
-      <div className="controls">
-        <em>
-          {!hasFilters ? (
-            <>Showing all {filteredMessages.length} messages</>
-          ) : (
-            <>
-              Showing {filteredMessages.length} of {allMessages.length}{" "}
-              messages. Try opening{" "}
-              <a href="/" target="_blank">
-                another tab
-              </a>{" "}
-              to see them all!
-            </>
-          )}
-        </em>
-      </div>
-      {filteredMessages.length === 0 ? (
-        <h3>
-          <em>No posts found 😢</em>
-        </h3>
-      ) : (
-        <table border={1} cellSpacing={0} cellPadding={6} width="100%">
-          <thead>
-            <tr>
-              <th>Sender</th>
-              <th>Medium</th>
-              <th>Message</th>
-              <th>Sent</th>
-              <th>Edit</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredMessages.map((message) => (
-              <tr key={message.id}>
-                <td align="left">{message.sender?.name}</td>
-                <td align="left">{message.medium?.name}</td>
-                <td align="left">{message.body}</td>
-                <td align="right">{formatDate(message.timestamp)}</td>
-                <td
-                  onMouseDown={(e) => {
-                    if (message.senderID !== z.userID && !e.shiftKey) {
-                      alert(
-                        "You aren't logged in as the sender of this message. Editing won't be permitted. Hold the shift key to try anyway."
-                      );
-                      return;
-                    }
-
-                    const body = prompt("Edit message", message.body);
-                    if (body === null) {
-                      return;
-                    }
-                    z.mutate.message.update({
-                      id: message.id,
-                      body,
-                    });
-                  }}
-                >
-                  ✏️
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
-    </>
+    </main>
   );
 }
-
-export default App;
