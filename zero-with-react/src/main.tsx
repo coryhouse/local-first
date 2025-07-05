@@ -17,7 +17,7 @@ const z = new Zero({
   auth: () => encodedJWT,
   server: import.meta.env.VITE_PUBLIC_SERVER,
   schema,
-  kvStore: "idb",
+  kvStore: "idb", // use IndexedDB as local store
 });
 
 createRoot(document.getElementById("root")!).render(
