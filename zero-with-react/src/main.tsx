@@ -1,6 +1,6 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import Inventory from "./Inventory.tsx";
+import App from "./App.tsx";
 import "./index.css";
 import { ZeroProvider } from "@rocicorp/zero/react";
 import { Zero } from "@rocicorp/zero";
@@ -23,7 +23,7 @@ const z = new Zero({
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <ZeroProvider zero={z}>
-      <Inventory />
+      <App />
     </ZeroProvider>
   </StrictMode>
 );
