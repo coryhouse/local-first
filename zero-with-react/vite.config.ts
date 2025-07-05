@@ -3,6 +3,7 @@ import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 import { app } from "./api/index.js";
 import dotenv from "dotenv";
+import tailwindcss from "@tailwindcss/vite";
 
 if (process.env.NODE_ENV === "development") {
   dotenv.config();
@@ -19,6 +20,7 @@ export default defineConfig({
   },
   plugins: [
     react(),
+    tailwindcss(),
     {
       name: "api-server",
       configureServer(server) {
