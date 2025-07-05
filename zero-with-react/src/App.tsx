@@ -47,23 +47,7 @@ export default function App() {
 
   return (
     <main className="p-8 flex flex-col gap-8 max-w-3xl">
-      <h1 className="text-3xl font-bold">
-        Crazy Cory's Car Lot (Electric SQL)
-      </h1>
-      <details>
-        <summary>
-          Note: Electric supports{" "}
-          <a href="https://electric-sql.com/docs/guides/writes#patterns">
-            multiple write styles
-          </a>{" "}
-        </summary>
-        <ol>
-          <li className="list-decimal ml-4">
-            <strong>Online writes</strong> (simplest, but only works online.)
-            Good for occasional writes or read only apps. (this demo uses this)
-          </li>
-        </ol>
-      </details>
+      <h1 className="text-3xl font-bold">Crazy Cory's Car Lot (Zero)</h1>
 
       <ul className="m-0 p-0">
         {vehicles.map((vehicle) => (
