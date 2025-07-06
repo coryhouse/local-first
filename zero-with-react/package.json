@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@rocicorp/zero": "0.20.2025051600",
+    "@tailwindcss/vite": "^4.1.11",
     "jose": "^5.9.6",
     "js-cookie": "^3.0.5",
     "react": "^18.3.1",
