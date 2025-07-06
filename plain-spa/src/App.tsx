@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import type { Vehicle } from "./types/Vehicle";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import { Input } from "./components/Input";
 import { Button } from "./components/Button";
 import { Select } from "./components/Select";
