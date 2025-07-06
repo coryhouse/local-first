@@ -101,7 +101,7 @@ export default function App() {
                 name="price"
                 placeholder="Price"
                 value={vehicle.price}
-                className="w-20"
+                className="w-24"
                 onChange={(e) => {
                   setVehicles((prev) =>
                     prev.map((v) =>
