@@ -15,19 +15,8 @@ import {
   string,
   boolean,
   number,
-  relationships,
   PermissionsConfig,
 } from "@rocicorp/zero";
-
-const message = table("message")
-  .columns({
-    id: string(),
-    senderID: string().from("sender_id"),
-    mediumID: string().from("medium_id"),
-    body: string(),
-    timestamp: number(),
-  })
-  .primaryKey("id");
 
 const vehicle = table("vehicle")
   .columns({
@@ -48,34 +37,12 @@ const user = table("user")
   })
   .primaryKey("id");
 
-const medium = table("medium")
-  .columns({
-    id: string(),
-    name: string(),
-  })
-  .primaryKey("id");
-
-const messageRelationships = relationships(message, ({ one }) => ({
-  sender: one({
-    sourceField: ["senderID"],
-    destField: ["id"],
-    destSchema: user,
-  }),
-  medium: one({
-    sourceField: ["mediumID"],
-    destField: ["id"],
-    destSchema: medium,
-  }),
-}));
-
 export const schema = createSchema({
-  tables: [user, medium, message, vehicle],
-  relationships: [messageRelationships],
+  tables: [user, vehicle],
+  relationships: [],
 });
 
 export type Schema = typeof schema;
-export type Message = Row<typeof schema.tables.message>;
-export type Medium = Row<typeof schema.tables.medium>;
 export type User = Row<typeof schema.tables.user>;
 export type Vehicle = Row<typeof schema.tables.vehicle>;
 
@@ -90,46 +57,25 @@ export const permissions = definePermissions<AuthData, Schema>(schema, () => {
     { cmpLit }: ExpressionBuilder<Schema, keyof Schema["tables"]>
   ) => cmpLit(authData.sub, "IS NOT", null);
 
-  const allowIfMessageSender = (
+  const allowIfVehicleOwner = (
     authData: AuthData,
-    { cmp }: ExpressionBuilder<Schema, "message">
-  ) => cmp("senderID", "=", authData.sub ?? "");
+    { cmp }: ExpressionBuilder<Schema, "vehicle">
+  ) => cmp("id", "!=", ""); // Hack. Allow anyone to update.
 
   return {
-    medium: {
-      row: {
-        select: ANYONE_CAN,
-      },
-    },
     vehicle: {
       row: {
         select: ANYONE_CAN,
         delete: ANYONE_CAN,
         insert: ANYONE_CAN,
         update: {
-          // preMutation: [allowIfVehicleOwner],
-          // postMutation: [allowIfVehicleOwner],
+          preMutation: [allowIfVehicleOwner],
+          postMutation: [allowIfVehicleOwner],
         },
       },
     },
     user: {
       row: {
-        select: ANYONE_CAN,
-      },
-    },
-    message: {
-      row: {
-        // anyone can insert
-        insert: ANYONE_CAN,
-        update: {
-          // sender can only edit own messages
-          preMutation: [allowIfMessageSender],
-          // sender can only edit messages to be owned by self
-          postMutation: [allowIfMessageSender],
-        },
-        // must be logged in to delete
-        delete: [allowIfLoggedIn],
-        // everyone can read current messages
         select: ANYONE_CAN,
       },
     },
