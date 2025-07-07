@@ -200,7 +200,7 @@ export default function Inventory() {
             value={newVehicle.model}
           />{" "}
           <Button
-            onClick={(e) => {
+            onClick={async (e) => {
               e.preventDefault();
               if (!newVehicle.year || !newVehicle.make || !newVehicle.model) {
                 toast.error("Please fill in all fields.");
@@ -208,24 +208,26 @@ export default function Inventory() {
               }
               setIsAdding(true);
 
-              fetch("http://localhost:3001/vehicles", {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify(newVehicle),
-              })
-                .then((response) => response.json())
-                .then((savedVehicle) => {
-                  setVehicles((prev) => [...prev, savedVehicle]);
-                  setNewVehicle(emptyVehicle); // Reset the form
-                })
-                .catch((error) => {
-                  toast.error("Failed to add vehicle: " + error.message);
-                })
-                .finally(() => {
-                  setIsAdding(false);
+              try {
+                const response = await fetch("http://localhost:3001/vehicles", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify(newVehicle),
                 });
+                const savedVehicle = await response.json();
+                setVehicles((prev) => [...prev, savedVehicle]);
+                setNewVehicle(emptyVehicle); // Reset the form
+              } catch (error: unknown) {
+                if (error instanceof Error) {
+                  toast.error("Failed to add vehicle: " + error.message);
+                } else {
+                  toast.error("Failed to add vehicle: " + String(error));
+                }
+              } finally {
+                setIsAdding(false);
+              }
             }}
           >
             Add
