@@ -95,6 +95,7 @@ export default function App() {
                       toast.error("Failed to delete vehicle: " + error.message);
                     })
                     .finally(() => {
+                      toast.success("Vehicle deleted");
                       setDeletingVehicleIds((prev) =>
                         prev.filter((id) => id !== v.id)
                       );
