@@ -180,18 +180,21 @@ export default function Inventory() {
         <form>
           <Input
             type="number"
+            name="year"
             placeholder="Year"
             onChange={onAddVehicleChange}
             value={newVehicle.year || ""}
           />{" "}
           <Input
             type="text"
+            name="make"
             placeholder="Make"
             onChange={onAddVehicleChange}
             value={newVehicle.make}
           />{" "}
           <Input
             type="text"
+            name="model"
             placeholder="Model"
             onChange={onAddVehicleChange}
             value={newVehicle.model}
