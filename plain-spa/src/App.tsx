@@ -216,8 +216,8 @@ export default function Inventory() {
                 body: JSON.stringify(newVehicle),
               })
                 .then((response) => response.json())
-                .then((data) => {
-                  setVehicles((prev) => [...prev, data]);
+                .then((savedVehicle) => {
+                  setVehicles((prev) => [...prev, savedVehicle]);
                   setNewVehicle(emptyVehicle); // Reset the form
                 })
                 .catch((error) => {
