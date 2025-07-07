@@ -14,7 +14,7 @@ const emptyVehicle: Vehicle = {
   status: null,
 };
 
-export default function Inventory() {
+export default function App() {
   const [newVehicle, setNewVehicle] = useState(emptyVehicle);
   const [savingVehicleIds, setSavingVehicleIds] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
