@@ -145,13 +145,16 @@ export default function App() {
                 <Button
                   type="submit"
                   style={{ backgroundColor: "white" }}
+                  disabled={
+                    savingVehicleIds.find((i) => i === v.id) !== undefined
+                  }
                   onClick={(e) => {
                     e.preventDefault();
-                    setSavingVehicleIds((prev) => [...prev, v.id]);
                     if (v.price === null || isNaN(v.price)) {
                       toast.error("Please enter a valid number for price.");
                       return;
                     }
+                    setSavingVehicleIds((prev) => [...prev, v.id]);
                     fetch(`http://localhost:3001/vehicles/${v.id}`, {
                       method: "PATCH",
                       headers: {
@@ -175,11 +178,10 @@ export default function App() {
                       });
                   }}
                 >
-                  Save
-                </Button>{" "}
-                {savingVehicleIds.find((i) => i === v.id) && (
-                  <span>Saving...</span>
-                )}
+                  {savingVehicleIds.find((i) => i === v.id)
+                    ? "Saving..."
+                    : "Save"}
+                </Button>
               </span>
             </li>
           ))}
@@ -238,6 +240,7 @@ export default function App() {
                   toast.error("Failed to add vehicle: " + String(error));
                 }
               } finally {
+                toast.success("Vehicle added");
                 setIsAdding(false);
               }
             }}
