@@ -19,6 +19,7 @@ export default function Inventory() {
   const [savingVehicleIds, setSavingVehicleIds] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isAdding, setIsAdding] = useState(false);
+  const [deletingVehicleIds, setDeletingVehicleIds] = useState<string[]>([]);
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
 
   useEffect(() => {
@@ -81,6 +82,7 @@ export default function Inventory() {
                 style={{ backgroundColor: "white" }}
                 onClick={(e) => {
                   e.preventDefault();
+                  setDeletingVehicleIds((prev) => [...prev, v.id]);
                   fetch(`http://localhost:3001/vehicles/${v.id}`, {
                     method: "DELETE",
                   })
@@ -91,10 +93,19 @@ export default function Inventory() {
                     })
                     .catch((error) => {
                       toast.error("Failed to delete vehicle: " + error.message);
+                    })
+                    .finally(() => {
+                      setDeletingVehicleIds((prev) =>
+                        prev.filter((id) => id !== v.id)
+                      );
                     });
                 }}
               >
-                ❌
+                {deletingVehicleIds.find((id) => id === v.id) ? (
+                  <span>Deleting...</span>
+                ) : (
+                  "❌"
+                )}
               </Button>
               <span className="flex-1">
                 {v.year} {v.make} {v.model}
