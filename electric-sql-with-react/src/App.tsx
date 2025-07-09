@@ -7,6 +7,7 @@ import { Input } from "./components/Input";
 import { Select } from "./components/Select";
 import api from "./client";
 import { ELECTRIC_URL } from "./config";
+import Logo from "./logo.svg";
 
 export default function App() {
   const [newVehicle, setNewVehicle] = useState({
@@ -43,7 +44,14 @@ export default function App() {
   }
 
   async function saveVehicle(vehicle: Vehicle) {
-    await api.request(`${ELECTRIC_URL}/vehicles/${vehicle.id}`, "PUT", vehicle);
+    const resp = await fetch(`${ELECTRIC_URL}/v1/vehicles/${vehicle.id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(vehicle),
+    });
+    const data = await resp.json();
     toast.success("Vehicle updated");
   }
 
@@ -54,7 +62,7 @@ export default function App() {
   return (
     <main className="p-8 flex flex-col gap-8 max-w-3xl">
       <h1 className="text-3xl font-bold">
-        Crazy Cory's Car Lot (Electric SQL)
+        Cory's Cars <img src={Logo} className="w-34 inline" alt="Logo" />
       </h1>
       <details>
         <summary>
