@@ -6,6 +6,7 @@ import { Button } from "./components/Button";
 import { Input } from "./components/Input";
 import { Select } from "./components/Select";
 import { Doc } from "../convex/_generated/dataModel";
+import Logo from "./logo.png";
 
 export default function App() {
   const [newVehicle, setNewVehicle] = useState({
@@ -52,7 +53,9 @@ export default function App() {
 
   return (
     <main className="p-8 flex flex-col gap-8 max-w-3xl">
-      <h1 className="text-3xl font-bold">Crazy Cory's Car Lot (Convex)</h1>
+      <h1 className="text-3xl font-bold">
+        Cory's Cars <img src={Logo} alt="Convex logo" className="w-32 inline" />
+      </h1>
       <ul className="m-0 p-0">
         {vehicles.map((vehicle) => (
           <li
