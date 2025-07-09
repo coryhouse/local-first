@@ -67,7 +67,7 @@ export default function App() {
 
   return (
     <main className="p-8 flex flex-col gap-8 max-w-3xl">
-      <h1 className="text-3xl font-bold">Crazy Cory's Car Lot (Plain SPA)</h1>
+      <h1 className="text-3xl font-bold">Cory's Cars (Plain SPA)</h1>
 
       {vehicles.length === 0 && <p>No vehicles found.</p>}
 
