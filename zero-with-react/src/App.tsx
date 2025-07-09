@@ -6,6 +6,7 @@ import { Button } from "./components/Button";
 import { Input } from "./components/Input";
 import { Select } from "./components/Select";
 import { randID } from "./rand";
+import Logo from "./logo.png";
 
 export default function App() {
   const z = useZero<Schema>();
@@ -47,7 +48,9 @@ export default function App() {
 
   return (
     <main className="p-8 flex flex-col gap-8 max-w-3xl">
-      <h1 className="text-3xl font-bold">Crazy Cory's Car Lot (Zero)</h1>
+      <h1 className="text-3xl font-bold">
+        Cory's Cars <img src={Logo} className="inline w-32" alt="Zero logo" />
+      </h1>
 
       <ul className="m-0 p-0">
         {vehicles.map((vehicle) => (
