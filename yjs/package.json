@@ -1,21 +1,24 @@
 {
-  "name": "typescript",
-  "version": "0.0.0",
+  "name": "vite-js",
   "private": true,
-  "main": "index.js",
+  "version": "0.0.0",
+  "type": "module",
   "scripts": {
-    "build": "bunx tsc",
-    "start": "bun run live-server"
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
   },
-  "dependencies": {
+  "devDependencies": {
     "@types/node": "^24.0.13",
     "@types/quill": "^2.0.3",
     "live-server": "^1.2.2",
     "quill": "^1.3.7",
     "quill-cursors": "^3.0.1",
     "serve": "^14.2.4",
+    "typescript": "~5.8.3",
     "y-quill": "^0.1.3",
     "y-webrtc": "^10.1.5",
-    "yjs": "^13.2.0"
+    "yjs": "^13.2.0",
+    "vite": "^7.0.4"
   }
 }
