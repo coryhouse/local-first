@@ -1,18 +1,20 @@
-import { StrictMode } from "react";
-import { createRoot } from "react-dom/client";
-import { ConvexAuthProvider } from "@convex-dev/auth/react";
-import { ConvexReactClient } from "convex/react";
-import "./index.css";
-import App from "./App.tsx";
-import { Toaster } from "sonner";
+import * as Y from "yjs";
 
-const convex = new ConvexReactClient(import.meta.env.VITE_CONVEX_URL as string);
+// Yjs documents are collections of shared objects that sync automatically.
+const ydoc = new Y.Doc();
+// Define a shared Y.Map instance
+const ymap = ydoc.getMap();
+ymap.set("keyA", "valueA");
 
-createRoot(document.getElementById("root")!).render(
-  <StrictMode>
-    <ConvexAuthProvider client={convex}>
-      <Toaster position="top-right" richColors />
-      <App />
-    </ConvexAuthProvider>
-  </StrictMode>,
-);
+// Create another Yjs document (simulating a remote user)
+// and create some conflicting changes
+const ydocRemote = new Y.Doc();
+const ymapRemote = ydocRemote.getMap();
+ymapRemote.set("keyA", "newValueB");
+
+// Merge changes from remote
+const update = Y.encodeStateAsUpdate(ydocRemote);
+Y.applyUpdate(ydoc, update);
+
+// Observe that the changes have merged
+console.log(ymap.toJSON()); // => { keyA: 'valueA', keyB: 'valueB' }

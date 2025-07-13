@@ -66,8 +66,11 @@ export default function App() {
       </h1>
       <details>
         <summary>
-          Note: Electric supports{" "}
-          <a href="https://electric-sql.com/docs/guides/writes#patterns">
+          Note: Electric only does read sync by default. It supports{" "}
+          <a
+            className="text-blue-500 hover:underline"
+            href="https://electric-sql.com/docs/guides/writes#patterns"
+          >
             multiple write styles
           </a>{" "}
         </summary>

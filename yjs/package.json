@@ -1,0 +1,21 @@
+{
+  "name": "typescript",
+  "version": "0.0.0",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "build": "bunx tsc",
+    "start": "bun run live-server"
+  },
+  "dependencies": {
+    "@types/node": "^24.0.13",
+    "@types/quill": "^2.0.3",
+    "live-server": "^1.2.2",
+    "quill": "^1.3.7",
+    "quill-cursors": "^3.0.1",
+    "serve": "^14.2.4",
+    "y-quill": "^0.1.3",
+    "y-webrtc": "^10.1.5",
+    "yjs": "^13.2.0"
+  }
+}
