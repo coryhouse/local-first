@@ -21,6 +21,7 @@ export const deleteVehicle = mutation({
 });
 
 export const add = mutation({
+  // NOTE: Can use Zod to validate args too: https://stack.convex.dev/typescript-zod-function-validation
   args: {
     make: v.string(),
     model: v.string(),
