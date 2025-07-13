@@ -26,3 +26,5 @@ INSERT INTO vehicles (make, model, year, price, status) VALUES
   ('Toyota', 'Camry', 2020, 25000, 'on sale'),
   ('Honda', 'Civic', 2021, 20000, 'on sale');
 ```
+
+7. Start Vite: `npm run dev`
