@@ -64,24 +64,6 @@ export default function App() {
       <h1 className="text-3xl font-bold">
         Cory's Cars <img src={Logo} className="w-34 inline" alt="Logo" />
       </h1>
-      <details>
-        <summary>
-          Note: Electric only does read sync by default. It supports{" "}
-          <a
-            className="text-blue-500 hover:underline"
-            href="https://electric-sql.com/docs/guides/writes#patterns"
-          >
-            multiple write styles
-          </a>{" "}
-        </summary>
-        <ol>
-          <li className="list-decimal ml-4">
-            <strong>Online writes</strong> (simplest, but only works online.)
-            Good for occasional writes or read only apps. (this demo uses this)
-          </li>
-        </ol>
-      </details>
-
       <ul className="m-0 p-0">
         {vehicles.map((vehicle) => (
           <li
@@ -151,7 +133,6 @@ export default function App() {
           </li>
         ))}
       </ul>
-
       <div className="flex flex-col gap-4">
         <h2 className="text-2xl font-bold">Add Vehicle</h2>
         <form>
