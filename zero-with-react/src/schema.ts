@@ -16,6 +16,7 @@ import {
   boolean,
   number,
   PermissionsConfig,
+  enumeration,
 } from "@rocicorp/zero";
 
 const vehicle = table("vehicle")
@@ -25,7 +26,7 @@ const vehicle = table("vehicle")
     model: string(),
     year: number(),
     price: number(),
-    status: string(),
+    status: enumeration<"on sale" | "sold" | "reconditioning">(),
   })
   .primaryKey("id");
 
