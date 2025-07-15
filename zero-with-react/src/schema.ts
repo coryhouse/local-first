@@ -58,10 +58,10 @@ export const permissions = definePermissions<AuthData, Schema>(schema, () => {
     { cmpLit }: ExpressionBuilder<Schema, keyof Schema["tables"]>
   ) => cmpLit(authData.sub, "IS NOT", null);
 
-  const allowIfVehicleOwner = (
+  const allowIfAdmin = (
     authData: AuthData,
     { cmp }: ExpressionBuilder<Schema, "vehicle">
-  ) => cmp("id", "!=", ""); // Hack. Allow anyone to update.
+  ) => cmp("id", "!=", ""); // TODO. Only allow if admin.
 
   return {
     vehicle: {
@@ -70,8 +70,8 @@ export const permissions = definePermissions<AuthData, Schema>(schema, () => {
         delete: ANYONE_CAN,
         insert: ANYONE_CAN,
         update: {
-          preMutation: [allowIfVehicleOwner],
-          postMutation: [allowIfVehicleOwner],
+          preMutation: [allowIfAdmin],
+          postMutation: [allowIfAdmin],
         },
       },
     },
