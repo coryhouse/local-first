@@ -11,7 +11,7 @@ import Logo from "./logo.png";
 export default function App() {
   const z = useZero<Schema>();
 
-  const [vehiclesInDb] = useQuery(z.query.vehicle, {
+  const [vehiclesInDb] = useQuery(z.query.vehicle.orderBy("year", "asc"), {
     ttl: "5m",
   });
 
