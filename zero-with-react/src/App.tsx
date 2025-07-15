@@ -125,6 +125,9 @@ export default function App() {
             type="number"
             placeholder="Year"
             value={newVehicle.year}
+            onInput={(e: React.FormEvent<HTMLInputElement>) =>
+              (e.currentTarget.value = e.currentTarget.value.slice(0, 4))
+            }
             onChange={onAddVehicleChange}
           />
           <Input
