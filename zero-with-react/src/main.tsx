@@ -4,7 +4,7 @@ import App from "./App.tsx";
 import "./index.css";
 import { ZeroProvider } from "@rocicorp/zero/react";
 import { Zero } from "@rocicorp/zero";
-import { schema } from "./schema.ts";
+import { schema } from "../shared/schema";
 import Cookies from "js-cookie";
 import { decodeJwt } from "jose";
 import { Toaster } from "sonner";
