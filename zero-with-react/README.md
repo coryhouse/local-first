@@ -145,29 +145,6 @@ For more examples of queries, mutations, and relationships, explore the
 This example includes JWT-based authentication. See [api/index.ts](api/index.ts)
 for an example implementation using Hono.
 
-### Development
-
-**1. Start the PostgreSQL database:**
-
-If you are using Docker (referencing the example in
-[docker](docker/docker-compose.yml)), run:
-
-```bash
-npm run docker-up
-```
-
-**2. Start the zero cache server (in a separate terminal):**
-
-```bash
-npx zero-cache
-```
-
-**3. Start your React dev server**
-
-```bash
-npm run dev # this depends on your react app setup
-```
-
 ## Interacting with the Docker container and the PostgreSQL database
 
 Create an interactive session:
