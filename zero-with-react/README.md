@@ -167,3 +167,15 @@ npx zero-cache
 ```bash
 npm run dev # this depends on your react app setup
 ```
+
+## Interacting with the Docker container and the PostgreSQL database
+
+Create an interactive session:
+
+`docker exec -it docker-zstart_postgres-1 psql -U user postgres`
+
+Then, run SQL commands like:
+
+```sql
+postgres=# SELECT * from vehicle;
+```
