@@ -1,19 +1,26 @@
 import type { CustomMutatorDefs } from "@rocicorp/zero";
-import type { schema } from "./schema";
+import type { schema, VehicleStatus } from "./schema";
 
 export function createMutators() {
   return {
     vehicle: {
-      update: async (tx, { id, make }: { id: string; make: string }) => {
+      update: async (
+        tx,
+        {
+          id,
+          price,
+          status,
+        }: { id: string; price: number; status: VehicleStatus }
+      ) => {
         // Read existing vehicle
         const prev = await tx.query.vehicle.where("id", id).one();
 
-        // Validate title length. Legacy issues are exempt.
-        if (make.length < 2) {
-          throw new Error(`Make is too short`);
+        // Validate price.
+        if (price < 0) {
+          throw new Error(`Price must be positive`);
         }
 
-        await tx.mutate.vehicle.update({ id, make });
+        await tx.mutate.vehicle.update({ id, price, status });
       },
     },
   } as const satisfies CustomMutatorDefs<typeof schema>;
