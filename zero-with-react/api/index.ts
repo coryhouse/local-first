@@ -2,12 +2,29 @@ import { Hono } from "hono";
 import { setCookie } from "hono/cookie";
 import { handle } from "hono/vercel";
 import { SignJWT } from "jose";
+import {
+  PushProcessor,
+  ZQLDatabase,
+  PostgresJSConnection,
+} from "@rocicorp/zero/pg";
+import postgres from "postgres";
+import { schema } from "../shared/schema";
+import { createMutators } from "../shared/mutators";
 
 export const config = {
   runtime: "edge",
 };
 
 export const app = new Hono().basePath("/api");
+
+// PushProcessor is provided by Zero to encapsulate a standard
+// implementation of the push protocol.
+const processor = new PushProcessor(
+  new ZQLDatabase(
+    new PostgresJSConnection(postgres(process.env.ZERO_UPSTREAM_DB! as string)),
+    schema
+  )
+);
 
 // See seed.sql
 // In real life you would of course authenticate the user however you like.
@@ -43,6 +60,11 @@ app.get("/login", async (c) => {
   });
 
   return c.text("ok");
+});
+
+app.post("/push", async (c) => {
+  const result = await processor.process(createMutators(), c.req.raw);
+  return await c.json(result);
 });
 
 export default handle(app);
