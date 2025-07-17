@@ -147,9 +147,8 @@ export default function App() {
             onClick={async (e) => {
               e.preventDefault();
               const vehicle: Vehicle = {
+                ...newVehicle,
                 id: randID(),
-                make: newVehicle.make,
-                model: newVehicle.model,
                 year: Number(newVehicle.year),
                 price: 0,
                 status: "reconditioning",
