@@ -26,7 +26,6 @@ const processor = new PushProcessor(
   )
 );
 
-// See seed.sql
 // In real life you would of course authenticate the user however you like.
 const userIDs = [
   "6z7dkeVLNm",
