@@ -4,5 +4,7 @@ export type Vehicle = {
   model: string;
   year: number;
   price: number;
-  status: "on sale" | "sold" | "reconditioning";
+  status: VehicleStatus;
 };
+
+export type VehicleStatus = "on sale" | "sold" | "reconditioning";
