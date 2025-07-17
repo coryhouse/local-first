@@ -42,8 +42,12 @@ export default function App() {
   }
 
   async function saveVehicle(vehicle: Vehicle) {
-    z.mutate.vehicle.update(vehicle);
-    toast.success("Vehicle updated");
+    try {
+      await z.mutate.vehicle.update(vehicle);
+      toast.success("Vehicle updated");
+    } catch (error: unknown) {
+      toast.error((error as Error)?.message || "Failed to update vehicle");
+    }
   }
 
   return (
