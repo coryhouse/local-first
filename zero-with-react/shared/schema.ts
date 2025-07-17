@@ -19,6 +19,8 @@ import {
   enumeration,
 } from "@rocicorp/zero";
 
+export type VehicleStatus = "on sale" | "sold" | "reconditioning";
+
 const vehicle = table("vehicle")
   .columns({
     id: string(),
@@ -26,7 +28,7 @@ const vehicle = table("vehicle")
     model: string(),
     year: number(),
     price: number(),
-    status: enumeration<"on sale" | "sold" | "reconditioning">(),
+    status: enumeration<VehicleStatus>(),
   })
   .primaryKey("id");
 
