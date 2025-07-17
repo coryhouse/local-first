@@ -1,17 +1,16 @@
 import type { CustomMutatorDefs } from "@rocicorp/zero";
 import type { schema, VehicleStatus } from "./schema";
 
+export type UpdateVehicleArgs = {
+  id: string;
+  price: number;
+  status: VehicleStatus;
+};
+
 export function createMutators() {
   return {
     vehicle: {
-      update: async (
-        tx,
-        {
-          id,
-          price,
-          status,
-        }: { id: string; price: number; status: VehicleStatus }
-      ) => {
+      update: async (tx, { id, price, status }: UpdateVehicleArgs) => {
         // Optionally, could read existing vehicle
         const prev = await tx.query.vehicle.where("id", id).one();
 
