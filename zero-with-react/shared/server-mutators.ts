@@ -6,7 +6,9 @@ import {
 import { Schema } from "./schema";
 import { type UpdateVehicleArgs } from "./mutators";
 
-export function createMutators(clientMutators: CustomMutatorDefs<Schema>) {
+export function createServerMutators(
+  clientMutators: CustomMutatorDefs<Schema>
+) {
   return {
     // Reuse all client mutators on the server, except the ones overridden below
     ...clientMutators,
