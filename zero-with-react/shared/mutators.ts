@@ -1,5 +1,5 @@
 import type { CustomMutatorDefs } from "@rocicorp/zero";
-import type { schema, VehicleStatus } from "./schema";
+import type { Schema, VehicleStatus } from "./schema";
 
 export type UpdateVehicleArgs = {
   id: string;
@@ -12,7 +12,7 @@ export function createMutators() {
     vehicle: {
       update: async (tx, { id, price, status }: UpdateVehicleArgs) => {
         // Optionally, could read existing vehicle
-        const prev = await tx.query.vehicle.where("id", id).one();
+        // const prev = await tx.query.vehicle.where("id", id).one();
 
         // if (tx.location === "server") // could also do server-specific logic this way and just call this in server-mutators.ts
         if (price < 0) {
@@ -22,5 +22,5 @@ export function createMutators() {
         await tx.mutate.vehicle.update({ id, price, status });
       },
     },
-  } as const satisfies CustomMutatorDefs<typeof schema>;
+  } as const satisfies CustomMutatorDefs<Schema>;
 }
