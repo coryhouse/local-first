@@ -12,12 +12,12 @@ export function createMutators() {
           status,
         }: { id: string; price: number; status: VehicleStatus }
       ) => {
-        // Read existing vehicle
+        // Optionally, could read existing vehicle
         const prev = await tx.query.vehicle.where("id", id).one();
 
-        // Validate price.
+        // if (tx.location === "server") // could also do server-specific logic this way and just call this in server-mutators.ts
         if (price < 0) {
-          throw new Error(`Price must be positive`);
+          throw new Error(`Price must be positive (validated on client)`);
         }
 
         await tx.mutate.vehicle.update({ id, price, status });
