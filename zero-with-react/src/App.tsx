@@ -1,5 +1,5 @@
 import { useQuery, useZero } from "@rocicorp/zero/react";
-import type { Schema, Vehicle } from "./schema";
+import type { Schema, Vehicle } from "../shared/schema";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "./components/Button";
@@ -146,7 +146,7 @@ export default function App() {
             type="submit"
             onClick={async (e) => {
               e.preventDefault();
-              const vehicle = {
+              const vehicle: Vehicle = {
                 id: randID(),
                 make: newVehicle.make,
                 model: newVehicle.model,
