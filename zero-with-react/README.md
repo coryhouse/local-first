@@ -14,6 +14,19 @@ Next, run docker:
 npm run dev:db-up
 ```
 
+If first run, connect to the database and create the `vehicle` table:
+
+```sql
+CREATE TABLE vehicle (
+  id VARCHAR(255) PRIMARY KEY,
+  make VARCHAR(255) NOT NULL,
+  model VARCHAR(255) NOT NULL,
+  year INT NOT NULL,
+  price INT NOT NULL,
+  status VARCHAR(255) NOT NULL
+);
+```
+
 **In a second terminal**, run the zero cache server:
 
 ```sh
