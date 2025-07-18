@@ -10,7 +10,7 @@ These steps are similar to the [Electric SQL Quickstart](https://electric-sql.co
 
 ```sql
 CREATE TABLE vehicles (
-  id SERIAL PRIMARY KEY,
+  id VARCHAR(255) PRIMARY KEY,
   make VARCHAR(255) NOT NULL,
   model VARCHAR(255) NOT NULL,
   year INT NOT NULL,
