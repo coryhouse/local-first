@@ -14,6 +14,7 @@ export function createMutators() {
         // Optionally, could read existing vehicle
         // const prev = await tx.query.vehicle.where("id", id).one();
 
+        // If I run only this, then it will throw an error in the console, and revert
         if (tx.location === "server") {
           if (price < 0) {
             throw new Error(
