@@ -24,7 +24,7 @@ export default function App() {
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
 
   useEffect(
-    function copyDbToLocalState() {
+    function copyQueryToState() {
       if (vehiclesInDb) {
         setVehicles(vehiclesInDb);
       }
