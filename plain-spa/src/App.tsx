@@ -90,12 +90,12 @@ export default function App() {
                       setVehicles((prev) =>
                         prev.filter((vehicle) => vehicle.id !== v.id)
                       );
+                      toast.success("Vehicle deleted");
                     })
                     .catch((error) => {
                       toast.error("Failed to delete vehicle: " + error.message);
                     })
                     .finally(() => {
-                      toast.success("Vehicle deleted");
                       setDeletingVehicleIds((prev) =>
                         prev.filter((id) => id !== v.id)
                       );
@@ -233,6 +233,7 @@ export default function App() {
                 const savedVehicle = await response.json();
                 setVehicles((prev) => [...prev, savedVehicle]);
                 setNewVehicle(emptyVehicle); // Reset the form
+                toast.success("Vehicle added");
               } catch (error: unknown) {
                 if (error instanceof Error) {
                   toast.error("Failed to add vehicle: " + error.message);
@@ -240,7 +241,6 @@ export default function App() {
                   toast.error("Failed to add vehicle: " + String(error));
                 }
               } finally {
-                toast.success("Vehicle added");
                 setIsAdding(false);
               }
             }}
