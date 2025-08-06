@@ -17,6 +17,15 @@ CREATE TABLE "message" (
   "timestamp" TIMESTAMP not null
 );
 
+CREATE TABLE "vehicle" (
+  "id" VARCHAR PRIMARY KEY,
+  "make" VARCHAR NOT NULL,
+  "model" VARCHAR NOT NULL,
+  "year" INT NOT NULL,
+  "price" INT NOT NULL,
+  "status" VARCHAR NOT NULL
+);
+
 INSERT INTO "user" (id, name, partner) VALUES ('ycD76wW4R2', 'Aaron', true);
 INSERT INTO "user" (id, name, partner) VALUES ('IoQSaxeVO5', 'Matt', true);
 INSERT INTO "user" (id, name, partner) VALUES ('WndZWmGkO4', 'Cesar', true);
